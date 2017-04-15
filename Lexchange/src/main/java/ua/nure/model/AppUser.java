@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class AppUser {
@@ -51,6 +52,9 @@ public class AppUser {
     private String country;
 
     private String url;
+
+    @ManyToMany(mappedBy="users")
+    private List<Chat> chats;
 
     @NotEmpty
     @Max(value = 10)
@@ -236,6 +240,14 @@ public class AppUser {
         this.url = url;
     }
 
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -261,7 +273,8 @@ public class AppUser {
         if (nativeLanguage != null ? !nativeLanguage.equals(appUser.nativeLanguage) : appUser.nativeLanguage != null)
             return false;
         if (country != null ? !country.equals(appUser.country) : appUser.country != null) return false;
-        return url != null ? url.equals(appUser.url) : appUser.url == null;
+        if (url != null ? !url.equals(appUser.url) : appUser.url != null) return false;
+        return chats != null ? chats.equals(appUser.chats) : appUser.chats == null;
 
     }
 
@@ -277,6 +290,7 @@ public class AppUser {
         result = 31 * result + (nativeLanguage != null ? nativeLanguage.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (chats != null ? chats.hashCode() : 0);
         result = 31 * result + religion;
         result = 31 * result + sport;
         result = 31 * result + music;
@@ -290,7 +304,7 @@ public class AppUser {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "AppUser{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
@@ -301,6 +315,7 @@ public class AppUser {
                 ", nativeLanguage='" + nativeLanguage + '\'' +
                 ", country='" + country + '\'' +
                 ", url='" + url + '\'' +
+                ", chats=" + chats +
                 ", religion=" + religion +
                 ", sport=" + sport +
                 ", music=" + music +
