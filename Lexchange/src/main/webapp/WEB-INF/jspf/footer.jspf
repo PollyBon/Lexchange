@@ -1,0 +1,90 @@
+<footer id="footer">
+    <a name = "footer"/>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 text-center bottom-separator">
+                <img src="../images/home/under.png" class="img-responsive inline" alt="">
+            </div>
+                <div class="col-md-4 col-sm-6">
+                    <c:if test="${empty err_log}">
+                        <h2>Sign In</h2>
+                    </c:if>
+                    <c:if test="${not empty err_log}">
+                        ${err_log}
+                    </c:if>
+                    <form method="post" action="login">
+                        <div class="form-group">
+                            <input type="login" name="login" class="form-control" required="required" placeholder="Login">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control" required="required" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-submit" value="Login">
+                        </div>
+                    </form>
+                </div>
+
+                <form method="post" action="register">
+                    <div class="col-md-4">
+                    <h2 class ="align-right">
+                        <c:if test="${empty err_reg}">
+                            Haven't account?
+                        </c:if>
+                        <c:if test="${not empty err_reg}">
+                            ${err_reg}
+                        </c:if>
+                    </h2>
+                        <div class="form-group">
+                            <input type="text" name="name" class="form-control" required="required" placeholder="Name" value = "${user.name}">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="login" class="form-control" required="required" placeholder="Login" value = "${user.login}">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="avatar" class="form-control" required="required" placeholder="URL avatar" value = "${user.avatar}">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" class="form-control" required="required" placeholder="Password" >
+                        </div>
+                        <div class="form-group">
+                            <input type="reset" name="submit" class="btn btn-reset" value="Clear">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                    <h2>Register</h2>
+                        <div class="form-group">
+                            <input type="text" name="surname" class="form-control" required="required" placeholder="Surname" value = "${user.surname}">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" class="form-control" required="required" placeholder="Email" value = "${user.email}">
+                        </div>
+                        <div class="form-group">
+                            <select name="country" class="form-control">
+                                <c:forEach var="elem" items="${countries}">
+                                    <option
+                                        <c:if test="${elem.equals(user.nativeCounty)}">
+                                            selected
+                                        </c:if>
+                                    > ${elem.name} </option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="repassword" class="form-control" required="required" placeholder="Repeat password">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="btn btn-submit" value="Register">
+                        </div>
+                    </div>
+                </form>
+
+            <div class="col-sm-12">
+                <div class="copyright-text text-center">
+                    <p>&copy; Kharkiv National University Of Radioelectronics</p>
+                    <p>Designed by <a target="_blank" href="https://vk.com/pollybon">Oleksii Kuznetsov</a> and <a target="_blank" href="https://vk.com/id19770208">Alla Kislaya</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
