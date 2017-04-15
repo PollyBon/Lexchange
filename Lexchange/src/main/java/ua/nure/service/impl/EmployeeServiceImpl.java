@@ -1,4 +1,4 @@
-package ua.nure.service;
+package ua.nure.service.impl;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.nure.dao.EmployeeDao;
 import ua.nure.model.Employee;
+import ua.nure.service.EmployeeService;
 
 @Service("employeeService")
 @Transactional

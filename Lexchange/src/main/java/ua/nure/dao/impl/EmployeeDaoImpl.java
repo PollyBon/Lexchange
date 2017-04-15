@@ -1,4 +1,4 @@
-package ua.nure.dao;
+package ua.nure.dao.impl;
 
 import java.util.List;
 
@@ -7,6 +7,8 @@ import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import ua.nure.dao.AbstractDao;
+import ua.nure.dao.EmployeeDao;
 import ua.nure.model.Employee;
 
 @Repository("employeeDao")
