@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center bottom-separator">
-                <img src="../images/home/under.png" class="img-responsive inline" alt="">
+                <img src="resources/images/home/under.png" class="img-responsive inline" alt="">
             </div>
                 <div class="col-md-4 col-sm-6">
                     <c:if test="${empty err_log}">

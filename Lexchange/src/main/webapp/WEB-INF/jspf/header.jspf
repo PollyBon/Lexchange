@@ -24,47 +24,47 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <a class="navbar-brand" href="../views/index.html">
-                    <h1><img src="images/logo.png" alt="logo"></h1>
+                <a class="navbar-brand" href="resources/views/index.html">
+                    <h1><img src="resources/images/logo.png" alt="logo"></h1>
                 </a>
 
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="../views/index.html">Home</a></li>
+                    <li class="active"><a href="resources/views/index.html">Home</a></li>
                     <li class="dropdown"><a href="#">Pages <i class="fa fa-angle-down"></i></a>
                         <ul role="menu" class="sub-menu">
-                            <li><a href="../views/aboutus.html">About</a></li>
-                            <li><a href="../views/aboutus2.html">About 2</a></li>
-                            <li><a href="../views/service.html">Services</a></li>
-                            <li><a href="../views/pricing.html">Pricing</a></li>
-                            <li><a href="../views/contact.html">Contact us</a></li>
-                            <li><a href="../views/contact2.html">Contact us 2</a></li>
-                            <li><a href="../views/404.html">404 error</a></li>
-                            <li><a href="../views/coming-soon.html">Coming Soon</a></li>
+                            <li><a href="resources/views/aboutus.html">About</a></li>
+                            <li><a href="resources/views/aboutus2.html">About 2</a></li>
+                            <li><a href="resources/views/service.html">Services</a></li>
+                            <li><a href="resources/views/pricing.html">Pricing</a></li>
+                            <li><a href="resources/views/contact.html">Contact us</a></li>
+                            <li><a href="resources/views/contact2.html">Contact us 2</a></li>
+                            <li><a href="resources/views/404.html">404 error</a></li>
+                            <li><a href="resources/views/coming-soon.html">Coming Soon</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown"><a href="../views/blog.html">Blog <i class="fa fa-angle-down"></i></a>
+                    <li class="dropdown"><a href="resources/views/blog.html">Blog <i class="fa fa-angle-down"></i></a>
                         <ul role="menu" class="sub-menu">
-                            <li><a href="../views/blog.html">Blog Default</a></li>
-                            <li><a href="../views/blogtwo.html">Timeline Blog</a></li>
-                            <li><a href="../views/blogone.html">2 Columns + Right Sidebar</a></li>
-                            <li><a href="../views/blogthree.html">1 Column + Left Sidebar</a></li>
-                            <li><a href="../views/blogfour.html">Blog Masonary</a></li>
-                            <li><a href="../views/blogdetails.html">Blog Details</a></li>
+                            <li><a href="resources/views/blog.html">Blog Default</a></li>
+                            <li><a href="resources/views/blogtwo.html">Timeline Blog</a></li>
+                            <li><a href="resources/views/blogone.html">2 Columns + Right Sidebar</a></li>
+                            <li><a href="resources/views/blogthree.html">1 Column + Left Sidebar</a></li>
+                            <li><a href="resources/views/blogfour.html">Blog Masonary</a></li>
+                            <li><a href="resources/views/blogdetails.html">Blog Details</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown"><a href="../views/portfolio.html">Portfolio <i class="fa fa-angle-down"></i></a>
+                    <li class="dropdown"><a href="resources/views/portfolio.html">Portfolio <i class="fa fa-angle-down"></i></a>
                         <ul role="menu" class="sub-menu">
-                            <li><a href="../views/portfolio.html">Portfolio Default</a></li>
-                            <li><a href="../views/portfoliofour.html">Isotope 3 Columns + Right Sidebar</a></li>
-                            <li><a href="../views/portfolioone.html">3 Columns + Right Sidebar</a></li>
-                            <li><a href="../views/portfoliotwo.html">3 Columns + Left Sidebar</a></li>
-                            <li><a href="../views/portfoliothree.html">2 Columns</a></li>
-                            <li><a href="../views/portfolio-details.html">Portfolio Details</a></li>
+                            <li><a href="resources/views/portfolio.html">Portfolio Default</a></li>
+                            <li><a href="resources/views/portfoliofour.html">Isotope 3 Columns + Right Sidebar</a></li>
+                            <li><a href="resources/views/portfolioone.html">3 Columns + Right Sidebar</a></li>
+                            <li><a href="resources/views/portfoliotwo.html">3 Columns + Left Sidebar</a></li>
+                            <li><a href="resources/views/portfoliothree.html">2 Columns</a></li>
+                            <li><a href="resources/views/portfolio-details.html">Portfolio Details</a></li>
                         </ul>
                     </li>
-                    <li><a href="../views/shortcodes.html ">Shortcodes</a></li>
+                    <li><a href="resources/views/shortcodes.html ">Shortcodes</a></li>
                 </ul>
             </div>
             <div class="search">
