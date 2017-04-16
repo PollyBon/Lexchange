@@ -3,6 +3,7 @@ package ua.nure.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Message {
@@ -14,11 +15,11 @@ public class Message {
     @NotEmpty
     private String content;
 
-    @NotEmpty
+    @NotNull
     @ManyToOne
     private AppUser user;
 
-    @NotEmpty
+    @NotNull
     @ManyToOne
     private Chat chat;
 

@@ -25,7 +25,7 @@ public class ChatDaoImpl extends AbstractDao<Long, Chat> implements ChatDao {
 
     public List<Chat> findAllChatsByUserId(long userId) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("userId", userId));
+        criteria.add(Restrictions.eq("user.id", userId));
         return (List<Chat>) criteria.list();
     }
 

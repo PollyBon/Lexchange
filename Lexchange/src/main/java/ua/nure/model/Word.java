@@ -3,6 +3,7 @@ package ua.nure.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Word {
@@ -11,7 +12,7 @@ public class Word {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotEmpty
+    @NotNull
     @ManyToOne
     private Dictionary dictionary;
 

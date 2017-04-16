@@ -18,7 +18,7 @@ public class DictionaryDaoImpl extends AbstractDao<Long, Dictionary> implements 
 
     public List<Dictionary> findDictionariesByUserId(long userId) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("userId", userId));
+        criteria.add(Restrictions.eq("user.id", userId));
         return (List<Dictionary>) criteria.list();
     }
 

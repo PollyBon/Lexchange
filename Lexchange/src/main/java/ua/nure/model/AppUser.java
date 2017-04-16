@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -36,12 +37,12 @@ public class AppUser {
     @Size(min = 1, max = 50)
     private String lastName;
 
-    @NotEmpty
+    @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate birthDate;
 
-    @NotEmpty
+    @NotNull
     @ManyToOne
     private Role role;
 
@@ -56,42 +57,42 @@ public class AppUser {
     @ManyToMany(mappedBy="users")
     private List<Chat> chats;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int religion;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int sport;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int music;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int games;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int politics;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int trips;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int art;
 
-    @NotEmpty
+    @NotNull
     @Max(value = 10)
     @Min(value = 1)
     private int science;
