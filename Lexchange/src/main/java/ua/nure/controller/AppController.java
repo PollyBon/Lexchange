@@ -3,6 +3,7 @@ package ua.nure.controller;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -37,53 +38,57 @@ public class AppController {
 
 
     @RequestMapping(value = { "/cabinet"}, method = RequestMethod.GET)
-    public String openCabinet(ModelMap model) {
-        AppUser appUser = new AppUser();
-        appUser.setRole(Role.NEW);
-        model.addAttribute("appUser", appUser);
+    public String openCabinet(ModelMap model, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if(user == null) {
+            user = new AppUser();
+        }
+        model.addAttribute("appUser", user);
         additionalAttributes(model);
         return "cabinet";
     }
 
     @RequestMapping(value = { "/cabinet"}, method = RequestMethod.POST)
-    public String register(@Valid AppUser appUser, BindingResult result, ModelMap model) {
+    public String register(@Valid AppUser appUser, BindingResult result, ModelMap model, HttpSession session) {
         additionalAttributes(model);
         if (result.hasErrors()) {
             return "cabinet";
-        }
-
-        if(!appUser.getPassword().equals(appUser.getRePassword())){
+        } else if(!appUser.getPassword().equals(appUser.getRePassword())){
             FieldError error = new FieldError("appUser", "rePassword", messageSource.getMessage(
                     "wrong.rePassword", null, Locale.getDefault()));
             result.addError(error);
             return "cabinet";
         }
 
-        appUserService.createUser(appUser);
+        if(appUser.getRole() == null) {
+            appUser.setRole(Role.NEW);
+        }
+        appUserService.createOrUpdate(appUser);
 
-        model.addAttribute("success", "Employee " + appUser.getFirstName() + " registered successfully");
-        return "cabinet";
+        session.setAttribute("user", appUser);
+        return "success";
     }
+
+    @RequestMapping(value = { "/login" }, method = RequestMethod.POST)
+    public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+        AppUser appUser = appUserService.findUserByEmail(email);
+        if(appUser != null && appUser.getPassword().equals(password)) {
+            session.setAttribute("user", appUser);
+            return "index";
+        } else {
+            return "redirect: cabinet";
+        }
+    }
+
+	@RequestMapping(value = { "/"}, method = RequestMethod.GET)
+	public String getIndex() {
+		return "index";
+	}
 
     private void additionalAttributes(ModelMap model) {
         model.addAttribute("countries", Country.values());
         model.addAttribute("languages", Language.values());
     }
-
-    @RequestMapping(value = { "/login" }, method = RequestMethod.POST)
-    public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        System.out.println(email);
-        System.out.println(password);
-
-        session.setAttribute("appUser", "");
-        return "success";
-    }
-
-	@RequestMapping(value = { "/"}, method = RequestMethod.GET)
-	public String getIndex(ModelMap model) {
-		return "index";
-	}
-
 	/////////////////////////////////////////////////////////////----OLD----///----CONTROLLER----////////////////////////
 
 

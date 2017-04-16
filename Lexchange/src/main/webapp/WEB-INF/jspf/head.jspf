@@ -11,6 +11,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/css/bootstrap-slider.min.css" rel="stylesheet">
     <link href="resources/css/font-awesome.min.css" rel="stylesheet">
     <link href="resources/css/animate.min.css" rel="stylesheet">
     <link href="resources/css/lightbox.css" rel="stylesheet">
@@ -30,6 +31,7 @@
 
     <script type="text/javascript" src="resources/js/jquery.js"></script>
     <script type="text/javascript" src="resources/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resources/js/bootstrap-slider.min.js"></script>
     <script type="text/javascript" src="resources/js/lightbox.min.js"></script>
     <script type="text/javascript" src="resources/js/wow.min.js"></script>
     <script type="text/javascript" src="resources/js/main.js"></script>

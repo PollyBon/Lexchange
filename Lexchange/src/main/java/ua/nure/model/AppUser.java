@@ -44,7 +44,6 @@ public class AppUser {
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate birthDate;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -70,10 +69,10 @@ public class AppUser {
 
     private int art;
 
+    private int science;
+
     @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
-
-    private int science;
 
     public long getId() {
         return id;

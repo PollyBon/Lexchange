@@ -20,6 +20,14 @@ public class AppUserServiceImpl implements AppUserService {
         return dao.findById(id);
     }
 
+    public void createOrUpdate(AppUser appUser) {
+        if(appUser.getId() == 0) {
+            createUser(appUser);
+        } else {
+            updateUser(appUser);
+        }
+    }
+
     public void createUser(AppUser appUser) {
         dao.createUser(appUser);
     }
@@ -35,6 +43,16 @@ public class AppUserServiceImpl implements AppUserService {
             user.setNativeLanguage(appUser.getNativeLanguage());
             user.setPassword(appUser.getPassword());
             user.setUrl(appUser.getUrl());
+            user.setRole(appUser.getRole());
+            user.setArt(appUser.getArt());
+            user.setMusic(appUser.getMusic());
+            user.setTrips(appUser.getTrips());
+            user.setGames(appUser.getGames());
+            user.setReligion(appUser.getReligion());
+            user.setScience(appUser.getScience());
+            user.setSport(appUser.getSport());
+            user.setPolitics(appUser.getPolitics());
+            user.setChats(appUser.getChats());
         }
     }
 
