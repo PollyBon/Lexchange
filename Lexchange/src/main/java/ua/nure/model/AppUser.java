@@ -5,10 +5,10 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import ua.nure.model.enumerated.Role;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -27,6 +27,9 @@ public class AppUser {
     @Size(min = 6, max = 30)
     private String password;
 
+    @Transient
+    private String rePassword;
+
     @NotEmpty
     @Size(min = 1, max = 50)
     private String firstName;
@@ -35,13 +38,13 @@ public class AppUser {
     @Size(min = 1, max = 50)
     private String lastName;
 
-    @NotEmpty
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate birthDate;
 
-    @NotEmpty
-    @ManyToOne
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @NotEmpty
@@ -52,44 +55,20 @@ public class AppUser {
 
     private String url;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int religion;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int sport;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int music;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int games;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int politics;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int trips;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int art;
 
-    @NotEmpty
-    @Max(value = 10)
-    @Min(value = 1)
     private int science;
 
     public long getId() {
@@ -234,6 +213,14 @@ public class AppUser {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getRePassword() {
+        return rePassword;
+    }
+
+    public void setRePassword(String rePassword) {
+        this.rePassword = rePassword;
     }
 
     @Override

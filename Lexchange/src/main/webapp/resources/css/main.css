@@ -137,6 +137,19 @@
     margin-bottom: 35px;
   }
 
+  .align-center {
+      text-align: center;
+  }
+
+  .avatar{
+      max-height:320px;
+      border: 20px solid #40c4c8;
+      -moz-border-image: url(../images/avatar-border.jpg) 20 round round;
+      -webkit-border-image: url(../images/avatar-border.jpg) 20 round round;
+      -o-border-image: url(../images/avatar-border.jpg) 20 round round;
+      border-image: url(../images/avatar-border.jpg) 20 round round;
+  }
+
      .carousel-indicators.visible-xs {
       height: 20px;
       margin: 0;
@@ -679,7 +692,7 @@ ul.sub-menu {
   display: table-cell;
   vertical-align: middle;
   width: 100%;
-  position: statice;
+  position: static;
 }
 
 
@@ -2545,6 +2558,10 @@ span.stButton_gradient,
   border-color:#DD4C3B;
 }
 
+
+.error{
+  color: #DD4C3B;
+}
 /*************************
 ******Coming Soon CSS*****
 **************************/
