@@ -22,7 +22,7 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
     }
 
     public void deleteUserByEmail(String email) {
-        Query query = getSession().createSQLQuery("delete from USER where email = :email");
+        Query query = getSession().createSQLQuery("delete from AppUser where email = :email");
         query.setString("email", email);
         query.executeUpdate();
     }
