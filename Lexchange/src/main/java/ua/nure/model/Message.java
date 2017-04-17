@@ -1,6 +1,10 @@
 package ua.nure.model;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,6 +26,11 @@ public class Message {
     @NotNull
     @ManyToOne
     private Chat chat;
+
+    @NotNull
+    @DateTimeFormat(pattern = "dd-MM-yyyy'T'HH:mm")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    private LocalDateTime sendingTime;
 
     public long getId() {
         return id;
@@ -55,6 +64,14 @@ public class Message {
         this.chat = chat;
     }
 
+    public LocalDateTime getSendingTime() {
+        return sendingTime;
+    }
+
+    public void setSendingTime(LocalDateTime sendingTime) {
+        this.sendingTime = sendingTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,7 +82,8 @@ public class Message {
         if (id != message.id) return false;
         if (content != null ? !content.equals(message.content) : message.content != null) return false;
         if (user != null ? !user.equals(message.user) : message.user != null) return false;
-        return chat != null ? chat.equals(message.chat) : message.chat == null;
+        if (chat != null ? !chat.equals(message.chat) : message.chat != null) return false;
+        return sendingTime != null ? sendingTime.equals(message.sendingTime) : message.sendingTime == null;
 
     }
 
@@ -75,6 +93,7 @@ public class Message {
         result = 31 * result + (content != null ? content.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (chat != null ? chat.hashCode() : 0);
+        result = 31 * result + (sendingTime != null ? sendingTime.hashCode() : 0);
         return result;
     }
 
@@ -85,6 +104,7 @@ public class Message {
                 ", content='" + content + '\'' +
                 ", user=" + user +
                 ", chat=" + chat +
+                ", sendingTime=" + sendingTime +
                 '}';
     }
 }
