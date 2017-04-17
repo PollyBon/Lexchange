@@ -5,10 +5,9 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import ua.nure.model.enumerated.Role;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -29,6 +28,9 @@ public class AppUser {
     @Size(min = 6, max = 30)
     private String password;
 
+    @Transient
+    private String rePassword;
+
     @NotEmpty
     @Size(min = 1, max = 50)
     private String firstName;
@@ -38,12 +40,11 @@ public class AppUser {
     private String lastName;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     private LocalDate birthDate;
 
-    @NotNull
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @NotEmpty
@@ -54,48 +55,26 @@ public class AppUser {
 
     private String url;
 
-    @ManyToMany(mappedBy="users")
-    private List<Chat> chats;
-
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int religion;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int sport;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int music;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int games;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int politics;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int trips;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int art;
 
-    @NotNull
-    @Max(value = 10)
-    @Min(value = 1)
     private int science;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Chat> chats;
+
+    private String approvementCode;
 
     public long getId() {
         return id;
@@ -241,12 +220,28 @@ public class AppUser {
         this.url = url;
     }
 
+    public String getRePassword() {
+        return rePassword;
+    }
+
+    public void setRePassword(String rePassword) {
+        this.rePassword = rePassword;
+    }
+
     public List<Chat> getChats() {
         return chats;
     }
 
     public void setChats(List<Chat> chats) {
         this.chats = chats;
+    }
+
+    public String getApprovementCode() {
+        return approvementCode;
+    }
+
+    public void setApprovementCode(String approvementCode) {
+        this.approvementCode = approvementCode;
     }
 
     @Override

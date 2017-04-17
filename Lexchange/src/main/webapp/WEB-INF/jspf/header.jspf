@@ -4,6 +4,28 @@
             <div class="col-sm-12 overflow">
                 <div class="social-icons pull-right">
                     <ul class="nav nav-pills">
+                        <li><spring:message code="language"/>:
+                            <select onchange="location.href=value" class="form-control form-small">
+                                <%--<c:forEach var="elem" items="${languages}">
+                                    <option value="?locale=${elem.code}"
+                                            <c:if test="${elem.code.equals(pageContext.response.locale.toLanguageTag())}">
+                                                selected
+                                            </c:if>
+                                    >${elem.name} </option>
+                                </c:forEach>--%>
+
+                                <option value="?locale=ru"
+                                        <c:if test="${'ru'.equals(pageContext.response.locale.toLanguageTag())}">
+                                            selected
+                                        </c:if>
+                                >Russian </option>
+                                <option value="?locale=en"
+                                        <c:if test="${'en'.equals(pageContext.response.locale.toLanguageTag())}">
+                                            selected
+                                        </c:if>
+                                >English </option>
+                            </select>
+                        </li>
                         <li><a href=""><i class="fa fa-facebook"></i></a></li>
                         <li><a href=""><i class="fa fa-twitter"></i></a></li>
                         <li><a href=""><i class="fa fa-google-plus"></i></a></li>
@@ -24,14 +46,25 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <a class="navbar-brand" href="resources/views/index.html">
+                <a class="navbar-brand" href="/lexchange/">
                     <h1><img src="resources/images/logo.png" alt="logo"></h1>
                 </a>
 
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="resources/views/index.html">Home</a></li>
+                    <li class="
+                    <c:if test="${'/WEB-INF/views/index.jsp'.equals(pageContext.request.servletPath)}">active</c:if>
+                    "><a href="/lexchange/"><spring:message code="home"/></a></li>
+                    <li class="
+                    <c:if test="${'/WEB-INF/views/cabinet.jsp'.equals(pageContext.request.servletPath)}">active</c:if>
+                    "><a href="cabinet"><spring:message code="cabinet"/> <c:if test="${not empty user}"><i class="fa fa-angle-down"></i></c:if></a>
+                        <c:if test="${not empty user}">
+                            <ul role="menu" class="sub-menu">
+                                <li><a href="logout"><spring:message code="logout"/></a></li>
+                            </ul>
+                        </c:if>
+                    </li>
                     <li class="dropdown"><a href="#">Pages <i class="fa fa-angle-down"></i></a>
                         <ul role="menu" class="sub-menu">
                             <li><a href="resources/views/aboutus.html">About</a></li>

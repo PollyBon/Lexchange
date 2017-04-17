@@ -8,6 +8,8 @@ public interface AppUserDao {
 
     AppUser findById(long id);
 
+    AppUser findByApprovementCode(String code);
+
     void createUser(AppUser appUser);
 
     void deleteUserByEmail(String email);
