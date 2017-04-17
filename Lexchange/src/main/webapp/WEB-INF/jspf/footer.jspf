@@ -19,11 +19,9 @@
                 </form>
             </c:if>
             <c:if test="${user.role.name().equals('NEW')}">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <spring:message code="confirm.email"/>
+                <div class="align-center">
+                    <h2><spring:message code="confirm.email"/></h2>
                 </div>
-                <div class="col-md-4"></div>
             </c:if>
             <div class="col-sm-12">
                 <div class="copyright-text text-center">

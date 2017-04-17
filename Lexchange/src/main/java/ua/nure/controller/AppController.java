@@ -86,11 +86,12 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/approve-{code}-code"}, method = RequestMethod.GET)
-    public String editEmployee(@PathVariable String code, HttpSession session) {
+    public String editEmployee(@PathVariable String code, HttpSession session, ModelMap model) {
         AppUser user = appUserService.findByApprovementCode(code);
         user.setRole(Role.USER);
         appUserService.updateUser(user);
         session.setAttribute("user", user);
+        model.addAttribute("appUser", user);
         return "cabinet";
     }
 
