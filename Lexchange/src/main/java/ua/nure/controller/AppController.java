@@ -61,7 +61,7 @@ public class AppController {
                 return "cabinet";
             }
 
-            if (appUser.getRole() == null) {
+            if (appUserService.findUserByEmail(appUser.getEmail()) == null) {
                 appUser.setRole(Role.NEW);
                 try {
                     sendApprovement(appUser);
@@ -88,16 +88,19 @@ public class AppController {
     @RequestMapping(value = {"/approve-{code}-code"}, method = RequestMethod.GET)
     public String editEmployee(@PathVariable String code, HttpSession session, ModelMap model) {
         AppUser user = appUserService.findByApprovementCode(code);
-        user.setRole(Role.USER);
-        appUserService.updateUser(user);
-        session.setAttribute("user", user);
-        model.addAttribute("appUser", user);
-        return "cabinet";
+        if(user != null) {
+            user.setRole(Role.USER);
+            appUserService.updateUser(user);
+            session.setAttribute("user", user);
+            model.addAttribute("appUser", user);
+            return "cabinet";
+        }
+        return "index";
     }
 
     private String generateUniqueCode(){
         Random random = new Random();
-        String temp = String.valueOf(random.nextLong());
+        String temp = String.valueOf(random.nextInt());
         if(appUserService.findByApprovementCode(temp) == null) {
             return temp;
         } else {
