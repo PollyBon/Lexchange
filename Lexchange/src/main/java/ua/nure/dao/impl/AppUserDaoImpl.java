@@ -17,6 +17,12 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
         return getByKey(id);
     }
 
+    public AppUser findByApprovementCode(String code) {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.eq("approvementCode", code));
+        return (AppUser) criteria.uniqueResult();
+    }
+
     public void createUser(AppUser appUser) {
         persist(appUser);
     }

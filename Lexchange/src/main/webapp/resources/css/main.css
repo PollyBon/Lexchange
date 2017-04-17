@@ -13,7 +13,7 @@
 
   body {
     background: #fff;
-    font-family: 'Lato', sans-serif;
+      font-family: "Book Antiqua", serif;
     font-weight: 300;
     font-size: 14px;
     line-height: 22px;
@@ -53,7 +53,6 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Lato', sans-serif;
     font-weight: 300;
   }
 
@@ -82,7 +81,6 @@
     font-size: 14px;
     color: #0099ae;
     border: 1px solid #0099ae;
-    font-family: 'Open Sans', sans-serif;
     font-weight: 300;
     padding: 10px 25px;
   }
@@ -462,7 +460,6 @@ ul.sub-menu {
   content: '"';
   font-size: 40px;
   color: #ea2c00;
-  font-family: 'Noto Sans', sans-serif;
   transform:rotate(180deg);
   -ms-transform:rotate(180deg); /* IE 9 */
   -webkit-transform: rotate(180deg); /* Opera, Chrome, and Safari */
@@ -476,7 +473,6 @@ ul.sub-menu {
   content: '"';
   font-size: 40px;
   color: #ea2c00;
-  font-family: 'Noto Sans', sans-serif;
   line-height: 0;
 }
 
@@ -501,6 +497,12 @@ ul.sub-menu {
      outline: none;
      box-shadow: none;
      height: 34px;
+ }
+
+ .form-small {
+     width: auto;
+     display: inline;
+     height: 32px !important;
  }
 
 .form-control {
@@ -2513,7 +2515,6 @@ span.stButton_gradient,
   margin-top: 50px;
   padding: 25px 53px;
   text-transform: uppercase;
-  font-family: 'Open Sans', sans-serif;
 }
 
 .btn-error:hover, .btn-error:focus  {

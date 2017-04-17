@@ -14,9 +14,15 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<postgre.version>9.4.1211</postgre.version>
 		<joda-time.version>2.3</joda-time.version>
+        <javax.mail.version>1.4</javax.mail.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${javax.mail.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>

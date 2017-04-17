@@ -5,21 +5,30 @@
 <body>
 
 <%@ include file="/WEB-INF/jspf/header.jspf" %>
+<spring:message var="name" code="name"/>
+<spring:message var="surname" code="surname"/>
+<spring:message var="email" code="email"/>
+<spring:message var="avatar" code="avatar"/>
+<spring:message var="password" code="password"/>
+<spring:message var="repeat" code="repeat"/>
+<spring:message var="clear" code="clear"/>
+<spring:message var="register" code="register"/>
+<spring:message var="submit" code="submit"/>
 
 <form:form method="POST" modelAttribute="appUser">
     <form:input type="hidden" path="id" id="id"/>
     <section id="home-slider">
         <div class="container">
             <div class="col-md-4">
-                <h2 class="align-right">Nice to meet you !</h2>
+                <h2 class="align-right"><spring:message code="greetings"/></h2>
                 <div class="form-group">
                     <form:input path="firstName" id="firstName" class="form-control" required="required"
-                                placeholder="Name"/>
+                                placeholder="${name}"/>
                     <form:errors path="firstName" cssClass="error"/>
                 </div>
                 <div class="form-group">
                     <form:input type="url" path="url" id="url" class="form-control" required="required"
-                                placeholder="Avatar"/>
+                                placeholder="${avatar}"/>
                     <form:errors path="url" cssClass="error"/>
                 </div>
                 <div class="form-group">
@@ -35,22 +44,22 @@
                 </div>
                 <div class="form-group">
                     <form:input type="password" path="password" id="password" class="form-control" required="required"
-                                placeholder="Password"/>
+                                placeholder="${password}"/>
                     <form:errors path="password" cssClass="error"/>
                 </div>
                 <div class="form-group">
-                    <input type="reset" name="submit" class="btn btn-reset" value="Clear">
+                    <input type="reset" name="submit" class="btn btn-reset" value="<spring:message code="clear"/>">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <form:input type="email" path="email" id="email" class="form-control" required="required"
-                                placeholder="Email"/>
+                                placeholder="${email}"/>
                     <form:errors path="email" cssClass="error"/>
                 </div>
                 <div class="form-group">
                     <form:input path="lastName" id="lastName" class="form-control" required="required"
-                                placeholder="Surname"/>
+                                placeholder="${surname}"/>
                     <form:errors path="lastName" cssClass="error"/>
                 </div>
                 <div class="form-group">
@@ -71,15 +80,15 @@
                 </div>
                 <div class="form-group">
                     <form:input type="password" path="rePassword" id="rePassword" class="form-control"
-                                required="required" placeholder="Repeat password"/>
+                                required="required" placeholder="${repeat}"/>
                     <form:errors path="rePassword" cssClass="error"/>
                 </div>
                 <div class="form-group">
                     <c:if test="${empty user}">
-                        <input type="submit" name="submit" class="btn btn-submit" value="Register">
+                        <input type="submit" name="submit" class="btn btn-submit" value="<spring:message code="register"/>">
                     </c:if>
                     <c:if test="${not empty user}">
-                        <input type="submit" name="submit" class="btn btn-submit" value="Submit">
+                        <input type="submit" name="submit" class="btn btn-submit" value="<spring:message code="submit"/>">
                     </c:if>
                 </div>
             </div>
@@ -102,16 +111,16 @@
         <div class="container">
             <div class="col-md-2">
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Music</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="music"/></h2>
                 </div>
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Sport</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="sport"/></h2>
                 </div>
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Art</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="art"/></h2>
                 </div>
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Trips</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="trips"/></h2>
                 </div>
             </div>
             <div class="col-md-4">
@@ -130,16 +139,16 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Politics</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="politics"/></h2>
                 </div>
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Science</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="science"/></h2>
                 </div>
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Religion</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="religion"/></h2>
                 </div>
                 <div class="form-group">
-                    <h2 class="align-right form-simple-text">Games</h2>
+                    <h2 class="align-right form-simple-text"><spring:message code="games"/></h2>
                 </div>
             </div>
             <div class="col-md-4">

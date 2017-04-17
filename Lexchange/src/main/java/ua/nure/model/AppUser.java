@@ -74,6 +74,8 @@ public class AppUser {
     @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
 
+    private String approvementCode;
+
     public long getId() {
         return id;
     }
@@ -232,6 +234,14 @@ public class AppUser {
 
     public void setChats(List<Chat> chats) {
         this.chats = chats;
+    }
+
+    public String getApprovementCode() {
+        return approvementCode;
+    }
+
+    public void setApprovementCode(String approvementCode) {
+        this.approvementCode = approvementCode;
     }
 
     @Override

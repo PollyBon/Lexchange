@@ -20,6 +20,10 @@ public class AppUserServiceImpl implements AppUserService {
         return dao.findById(id);
     }
 
+    public AppUser findByApprovementCode(String code) {
+        return dao.findByApprovementCode(code);
+    }
+
     public void createOrUpdate(AppUser appUser) {
         if(appUser.getId() == 0) {
             createUser(appUser);

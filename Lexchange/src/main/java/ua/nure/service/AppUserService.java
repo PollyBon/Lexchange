@@ -8,6 +8,8 @@ public interface AppUserService {
 
     AppUser findById(long id);
 
+    AppUser findByApprovementCode(String code);
+
     void createOrUpdate(AppUser appUser);
 
     void createUser(AppUser appUser);
