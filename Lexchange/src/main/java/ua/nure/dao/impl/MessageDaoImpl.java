@@ -26,7 +26,7 @@ public class MessageDaoImpl extends AbstractDao<Long, Message> implements Messag
 
     public List<Message> findAllMessagesForChat(long chatId) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("id", chatId));
+        criteria.add(Restrictions.eq("chat.id", chatId));
         return (List<Message>) criteria.list();
     }
 }

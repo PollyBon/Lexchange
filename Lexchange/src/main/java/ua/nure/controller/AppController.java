@@ -1,8 +1,11 @@
 package ua.nure.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +19,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import ua.nure.model.AppUser;
 import ua.nure.model.Employee;
+import ua.nure.model.Message;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
 import ua.nure.service.EmployeeService;
+import ua.nure.service.MessageService;
 import ua.nure.util.Sender;
 
 
@@ -39,6 +45,9 @@ public class AppController {
 
     @Autowired
     MessageSource messageSource;
+
+    @Autowired
+    MessageService messageService;
 
 
     @RequestMapping(value = {"/cabinet"}, method = RequestMethod.GET)
@@ -129,6 +138,43 @@ public class AppController {
     public String getIndex() {
         return "index";
     }
+
+
+
+    ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
+    @RequestMapping(value = {"/chat"}, method=RequestMethod.GET)
+    @ResponseBody
+    public DeferredResult<List<Message>> getMessages(@RequestParam long chatId) {
+
+        final DeferredResult<List<Message>> deferredResult = new DeferredResult<>(null, Collections.emptyList());
+
+        List<Message> messages = messageService.findAllMessagesForChat(chatId);
+        if (!messages.isEmpty()) {
+            deferredResult.setResult(messages);
+        }
+
+        return deferredResult;
+    }
+
+    @RequestMapping(value = {"/chat"}, method=RequestMethod.POST)
+    @ResponseBody
+    public void postMessage(@RequestParam String message) {
+
+        this.chatRepository.addMessage(message);
+
+        // Update all chat requests as part of the POST request
+        // See Redis branch for a more sophisticated, non-blocking approach
+
+        for (Map.Entry<DeferredResult<List<String>>, Integer> entry : this.chatRequests.entrySet()) {
+            List<String> messages = this.chatRepository.getMessages(entry.getValue());
+            entry.getKey().setResult(messages);
+        }
+    }
+
+    ///////////////DO NOT DISTURB!!!!///////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
+
+
+
 
 
     /////////////////////////////////////////////////////////////----OLD----///----CONTROLLER----////////////////////////
