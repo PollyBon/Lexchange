@@ -148,10 +148,8 @@ public class AppController {
     ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
     @RequestMapping(value = {"/leaveChat"}, method = RequestMethod.POST)
     @ResponseBody
-    public void createChatOf2(HttpSession session, @RequestParam long chatId) {
-        AppUser appUser = (AppUser)session.getAttribute("user");
-
-
+    public void updateChatOf2(@RequestParam long chatId) {
+        chatService.updateChatStatus(chatId);
     }
 
     @RequestMapping(value = {"/createChatOf2"}, method = RequestMethod.POST)

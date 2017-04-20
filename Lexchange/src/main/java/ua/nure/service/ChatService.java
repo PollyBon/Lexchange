@@ -14,5 +14,5 @@ public interface ChatService {
 
     Chat findChatById(long chatId);
 
-    void updateChatStatus(long chatId, long userId);
+    void updateChatStatus(long chatId);
 }
