@@ -1,4 +1,4 @@
-package ua.nure.config;
+package ua.nure.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

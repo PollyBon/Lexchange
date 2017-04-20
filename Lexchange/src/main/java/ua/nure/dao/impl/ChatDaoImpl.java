@@ -34,4 +34,5 @@ public class ChatDaoImpl extends AbstractDao<Long, Chat> implements ChatDao {
         criteria.add(Restrictions.eq("id", chatId));
         return (Chat) criteria.uniqueResult();
     }
+
 }

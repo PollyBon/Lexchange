@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ua.nure.config;
+package ua.nure.configuration;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

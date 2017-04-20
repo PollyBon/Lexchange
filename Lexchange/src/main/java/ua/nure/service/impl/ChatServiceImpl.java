@@ -32,4 +32,11 @@ public class ChatServiceImpl implements ChatService{
     public Chat findChatById(long chatId) {
         return dao.findChatById(chatId);
     }
+
+    @Override
+    public void updateChatStatus(long chatId, long userId) {
+        Chat chat = dao.findChatById(chatId);
+
+        chat.setActive(false);
+    }
 }

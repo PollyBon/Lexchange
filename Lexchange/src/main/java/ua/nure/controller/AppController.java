@@ -1,33 +1,35 @@
 package ua.nure.controller;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.nure.model.AppUser;
+import ua.nure.model.Chat;
 import ua.nure.model.Employee;
 import ua.nure.model.Message;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
+import ua.nure.service.ChatService;
 import ua.nure.service.EmployeeService;
 import ua.nure.service.MessageService;
 import ua.nure.util.Sender;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 
 @Controller
@@ -48,6 +50,9 @@ public class AppController {
 
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    ChatService chatService;
 
 
     @RequestMapping(value = {"/cabinet"}, method = RequestMethod.GET)
@@ -97,7 +102,7 @@ public class AppController {
     @RequestMapping(value = {"/approve-{code}-code"}, method = RequestMethod.GET)
     public String editEmployee(@PathVariable String code, HttpSession session, ModelMap model) {
         AppUser user = appUserService.findByApprovementCode(code);
-        if(user != null) {
+        if (user != null) {
             user.setRole(Role.USER);
             appUserService.updateUser(user);
             session.setAttribute("user", user);
@@ -107,10 +112,10 @@ public class AppController {
         return "index";
     }
 
-    private String generateUniqueCode(){
+    private String generateUniqueCode() {
         Random random = new Random();
         String temp = String.valueOf(random.nextInt());
-        if(appUserService.findByApprovementCode(temp) == null) {
+        if (appUserService.findByApprovementCode(temp) == null) {
             return temp;
         } else {
             return generateUniqueCode();
@@ -140,41 +145,52 @@ public class AppController {
     }
 
 
-
     ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
-    @RequestMapping(value = {"/chat"}, method=RequestMethod.GET)
+    @RequestMapping(value = {"/leaveChat"}, method = RequestMethod.POST)
     @ResponseBody
-    public DeferredResult<List<Message>> getMessages(@RequestParam long chatId) {
+    public void createChatOf2(HttpSession session, @RequestParam long chatId) {
+        AppUser appUser = (AppUser)session.getAttribute("user");
 
-        final DeferredResult<List<Message>> deferredResult = new DeferredResult<>(null, Collections.emptyList());
 
-        List<Message> messages = messageService.findAllMessagesForChat(chatId);
-        if (!messages.isEmpty()) {
-            deferredResult.setResult(messages);
-        }
-
-        return deferredResult;
     }
 
-    @RequestMapping(value = {"/chat"}, method=RequestMethod.POST)
+    @RequestMapping(value = {"/createChatOf2"}, method = RequestMethod.POST)
     @ResponseBody
-    public void postMessage(@RequestParam String message) {
+    public void createChatOf2(@RequestParam long userId, HttpSession session) {
+        Chat chat = new Chat();
 
-        this.chatRepository.addMessage(message);
+        AppUser user1 = (AppUser) session.getAttribute("user");
+        AppUser user2 = appUserService.findById(userId);
+        List<AppUser> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
 
-        // Update all chat requests as part of the POST request
-        // See Redis branch for a more sophisticated, non-blocking approach
+        chat.setUsers(users);
+        chat.setActive(true);
 
-        for (Map.Entry<DeferredResult<List<String>>, Integer> entry : this.chatRequests.entrySet()) {
-            List<String> messages = this.chatRepository.getMessages(entry.getValue());
-            entry.getKey().setResult(messages);
-        }
+        chatService.createChat(chat);
+    }
+
+    @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List<Message> getMessages(@RequestParam long chatId) {
+        return messageService.findAllMessagesForChat(chatId);
+    }
+
+    @RequestMapping(value = {"/chat"}, method = RequestMethod.POST)
+    @ResponseBody
+    public void postMessage(@RequestParam String messageText, @RequestParam long chatId, HttpSession session) {
+        Message message = new Message();
+
+        message.setSendingTime(new LocalDateTime());
+        message.setContent(messageText);
+        message.setChat(chatService.findChatById(chatId));
+        message.setUser((AppUser) session.getAttribute("user"));
+
+        messageService.createMessage(message);
     }
 
     ///////////////DO NOT DISTURB!!!!///////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
-
-
-
 
 
     /////////////////////////////////////////////////////////////----OLD----///----CONTROLLER----////////////////////////

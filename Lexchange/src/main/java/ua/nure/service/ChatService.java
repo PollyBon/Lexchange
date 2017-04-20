@@ -13,4 +13,6 @@ public interface ChatService {
     List<Chat> findAllChatsByUserId(long userId);
 
     Chat findChatById(long chatId);
+
+    void updateChatStatus(long chatId, long userId);
 }
