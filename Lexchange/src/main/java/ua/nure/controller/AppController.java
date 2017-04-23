@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.async.DeferredResult;
+import ua.nure.chat.ChatRepository;
+import ua.nure.chat.InMemoryChatRepository;
 import ua.nure.model.AppUser;
 import ua.nure.model.Chat;
 import ua.nure.model.Employee;
@@ -26,10 +29,8 @@ import ua.nure.util.Sender;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Controller
@@ -146,14 +147,17 @@ public class AppController {
 
 
     ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
+    @RequestMapping(value = "/chatPage", method = RequestMethod.GET)
+    public String getChatPage(){
+        return "chat";
+    }
+
     @RequestMapping(value = {"/leaveChat"}, method = RequestMethod.POST)
-    @ResponseBody
     public void updateChatOf2(@RequestParam long chatId) {
         chatService.updateChatStatus(chatId);
     }
 
     @RequestMapping(value = {"/createChatOf2"}, method = RequestMethod.POST)
-    @ResponseBody
     public void createChatOf2(@RequestParam long userId, HttpSession session) {
         Chat chat = new Chat();
 
@@ -170,13 +174,11 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
-    @ResponseBody
     public List<Message> getMessages(@RequestParam long chatId) {
         return messageService.findAllMessagesForChat(chatId);
     }
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.POST)
-    @ResponseBody
     public void postMessage(@RequestParam String messageText, @RequestParam long chatId, HttpSession session) {
         Message message = new Message();
 
@@ -187,6 +189,49 @@ public class AppController {
 
         messageService.createMessage(message);
     }
+
+//    private final ChatRepository chatRepository = new InMemoryChatRepository();
+//
+//    private final Map<DeferredResult<List<String>>, Integer> chatRequests =
+//            new ConcurrentHashMap<DeferredResult<List<String>>, Integer>();
+//
+//
+//    @RequestMapping(value = "/chat", method = RequestMethod.GET)
+//    @ResponseBody
+//    public DeferredResult<List<String>> getMessages(@RequestParam int messageIndex) {
+//
+//        final DeferredResult<List<String>> deferredResult = new DeferredResult<List<String>>(null, Collections.emptyList());
+//        this.chatRequests.put(deferredResult, messageIndex);
+//
+//        deferredResult.onCompletion(new Runnable() {
+//            @Override
+//            public void run() {
+//                chatRequests.remove(deferredResult);
+//            }
+//        });
+//
+//        List<String> messages = this.chatRepository.getMessages(messageIndex);
+//        if (!messages.isEmpty()) {
+//            deferredResult.setResult(messages);
+//        }
+//
+//        return deferredResult;
+//    }
+//
+//    @RequestMapping(value = "/chat", method = RequestMethod.POST)
+//    @ResponseBody
+//    public void postMessage(@RequestParam String message) {
+//
+//        this.chatRepository.addMessage(message);
+//
+//        // Update all chat requests as part of the POST request
+//        // See Redis branch for a more sophisticated, non-blocking approach
+//
+//        for (Map.Entry<DeferredResult<List<String>>, Integer> entry : this.chatRequests.entrySet()) {
+//            List<String> messages = this.chatRepository.getMessages(entry.getValue());
+//            entry.getKey().setResult(messages);
+//        }
+//    }
 
     ///////////////DO NOT DISTURB!!!!///////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
 

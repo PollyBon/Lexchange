@@ -1,79 +1,80 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-	function ChatViewModel() {
+    function ChatViewModel() {
 
-		var that = this;
+        var that = this;
 
-		that.userName = ko.observable('');
-		that.chatContent = ko.observable('');
-		that.message = ko.observable('');
-		that.messageIndex = ko.observable(0);
-		that.activePollingXhr = ko.observable(null);
-		
-		var keepPolling = false;
+        that.userName = ko.observable('');
+        that.chatId = ko.observable(1);
+        that.chatContent = ko.observable('');
+        that.messageText = ko.observable('');
+        that.activePollingXhr = ko.observable(null);
 
-		that.joinChat = function() {
-			if (that.userName().trim() != '') {
-				keepPolling = true;
-				pollForMessages();
-			}
-		}
+        var keepPolling = true;
 
-		function pollForMessages() {
-			if (!keepPolling) {
-				return;
-			}
-			var form = $("#joinChatForm");
-			that.activePollingXhr($.ajax({url : form.attr("action"), type : "GET", data : form.serialize(),cache: false,
-				success : function(messages) {
-					for ( var i = 0; i < messages.length; i++) {
-						that.chatContent(that.chatContent() + messages[i] + "\n");
-						that.messageIndex(that.messageIndex() + 1);
-					}
-				},
-				error : function(xhr) {
-					if (xhr.statusText != "abort" && xhr.status != 503) {
-						resetUI();
-						console.error("Unable to retrieve chat messages. Chat ended.");
-					}
-				},
-				complete : pollForMessages
-			}));
-			$('#message').focus();
-		}
+        that.joinChat = function () {
+            pollForMessages();
+        };
 
-		that.postMessage = function() {
-			if (that.message().trim() != '') {
-				var form = $("#postMessageForm");
-				$.ajax({url : form.attr("action"), type : "POST",
-				  data : "message=[" + that.userName() + "] " + $("#postMessageForm input[name=message]").val(),
-					error : function(xhr) {
-						console.error("Error posting chat message: status=" + xhr.status + ", statusText=" + xhr.statusText);
-					}
-				});
-				that.message('');
-			}
-		}
+        function pollForMessages() {
+            if (!keepPolling) {
+                return;
+            }
+            var form = $("#joinChatForm");
+            that.activePollingXhr($.ajax({
+                url: form.attr("action"),
+                type: "GET",
+                data: $("#joinChatForm input[name=chatId]").val(),
+                cache: false,
+                success: function (messages) {
+                    for (var i = 0; i < messages.length; i++) {
+                        that.chatContent(that.chatContent() + messages[i] + "\n");
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.statusText != "abort" && xhr.status != 503) {
+                        resetUI();
+                        console.error("Unable to retrieve chat messages. Chat ended.");
+                    }
+                },
+                complete: pollForMessages
+            }));
+            $('#messageText').focus();
+        }
 
-		that.leaveChat = function() {
-			that.activePollingXhr(null);
-			resetUI();
-			this.userName('');
-		}
+        that.postMessage = function () {
+            if (that.messageText().trim() != '') {
+                var form = $("#postMessageForm");
+                $.ajax({
+                    url: form.attr("action"),
+                    type: "POST",
+                    data: form.serialize(),
+                    error: function (xhr) {
+                        console.error("Error posting chat message: status=" + xhr.status + ", statusText=" + xhr.statusText);
+                    }
+                });
+                that.messageText('');
+            }
+        };
 
-		function resetUI() {
-			keepPolling = false;
-			that.activePollingXhr(null);
-			that.message('');
-			that.messageIndex(0);
-			that.chatContent('');
-		}
-		
-	}
+        that.leaveChat = function () {
+            that.activePollingXhr(null);
+            resetUI();
+            this.userName('');
+        };
 
-	//Activate knockout.js
-	ko.applyBindings(new ChatViewModel());
-	
+        function resetUI() {
+            keepPolling = false;
+            that.activePollingXhr(null);
+            that.messageText('');
+            that.chatContent('');
+        }
+
+    }
+
+    //Activate knockout.js
+    ko.applyBindings(new ChatViewModel());
+
 });
 
 
