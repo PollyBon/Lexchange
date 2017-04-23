@@ -11,14 +11,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.async.DeferredResult;
-import ua.nure.chat.ChatRepository;
-import ua.nure.chat.InMemoryChatRepository;
 import ua.nure.model.AppUser;
 import ua.nure.model.Chat;
 import ua.nure.model.Employee;
 import ua.nure.model.Message;
+import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
 import ua.nure.service.ChatService;
@@ -30,7 +27,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 @Controller
@@ -55,6 +51,20 @@ public class AppController {
     @Autowired
     ChatService chatService;
 
+
+    @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
+    public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if(user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+            model.addAttribute("appUser", new AppUser());
+            return "cabinet";
+        }
+        searchBean.setService(appUserService);
+        searchBean.setCurrentUser(user);
+        model.addAttribute("searchBean", searchBean);
+
+        return "search";
+    }
 
     @RequestMapping(value = {"/cabinet"}, method = RequestMethod.GET)
     public String openCabinet(ModelMap model, HttpSession session) {
@@ -132,6 +142,11 @@ public class AppController {
         } else {
             return "redirect: cabinet";
         }
+    }
+
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    public String getLogin() {
+        return "index";
     }
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)

@@ -111,10 +111,16 @@ public enum Language {
         this.name = name;
     }
 
-    public Language getByName(String name) {
+    public static Language getByName(String name) {
         return Arrays.asList(values()).stream()
                 .filter(l -> l.getName().equals(name))
                 .findAny().get();
+    }
+
+    public static Language getByCode(String code) {
+        return Arrays.asList(values()).stream()
+                .filter(l -> l.getCode().equals(code))
+                .findAny().orElseGet(() -> null);
     }
 
     public String getCode() {

@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
+import org.joda.time.Years;
 import org.springframework.format.annotation.DateTimeFormat;
 import ua.nure.model.enumerated.Role;
 
@@ -71,6 +72,11 @@ public class AppUser {
 
     private int science;
 
+    private String interestedIn;
+
+    @Transient
+    private String[] interested;
+
     @ManyToMany(mappedBy = "users")
     private List<Chat> chats;
 
@@ -118,6 +124,10 @@ public class AppUser {
 
     public LocalDate getBirthDate() {
         return birthDate;
+    }
+
+    public int getAge() {
+        return Years.yearsBetween(getBirthDate(), new LocalDate()).getYears();
     }
 
     public void setBirthDate(LocalDate birthDate) {
@@ -244,6 +254,31 @@ public class AppUser {
         this.approvementCode = approvementCode;
     }
 
+    public String getInterestedIn() {
+        if(interestedIn == null && interested != null && interested.length != 0) {
+            return interested[0] + ";" + interested[1] + ";" + interested[2];
+        }
+        return interestedIn;
+    }
+
+    public void setInterestedIn(String interestedIn) {
+        this.interestedIn = interestedIn;
+    }
+
+    public String[] getInterested() {
+        if(interested == null) {
+            setInterested(new String [3]);
+            if(interestedIn != null) {
+                setInterested(interestedIn.split(";"));
+            }
+        }
+        return interested;
+    }
+
+    public void setInterested(String[] interested) {
+        this.interested = interested;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -269,8 +304,7 @@ public class AppUser {
         if (nativeLanguage != null ? !nativeLanguage.equals(appUser.nativeLanguage) : appUser.nativeLanguage != null)
             return false;
         if (country != null ? !country.equals(appUser.country) : appUser.country != null) return false;
-        if (url != null ? !url.equals(appUser.url) : appUser.url != null) return false;
-        return chats != null ? chats.equals(appUser.chats) : appUser.chats == null;
+        return url != null ? url.equals(appUser.url) : appUser.url == null;
 
     }
 
@@ -311,7 +345,6 @@ public class AppUser {
                 ", nativeLanguage='" + nativeLanguage + '\'' +
                 ", country='" + country + '\'' +
                 ", url='" + url + '\'' +
-                ", chats=" + chats +
                 ", religion=" + religion +
                 ", sport=" + sport +
                 ", music=" + music +

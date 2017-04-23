@@ -1,12 +1,15 @@
 package ua.nure.service;
 
 import ua.nure.model.AppUser;
+import ua.nure.model.bean.SearchBean;
 
 import java.util.List;
 
 public interface AppUserService {
 
     AppUser findById(long id);
+
+    List<AppUser> findByCriteria(SearchBean bean);
 
     AppUser findByApprovementCode(String code);
 

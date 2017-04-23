@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ua.nure.dao.AbstractDao;
 import ua.nure.dao.AppUserDao;
 import ua.nure.model.AppUser;
+import ua.nure.model.bean.SearchBean;
 
 import java.util.List;
 
@@ -15,6 +16,11 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
 
     public AppUser findById(long id) {
         return getByKey(id);
+    }
+
+    public List<AppUser> findByCriteria(SearchBean bean) {
+        Criteria criteria = createEntityCriteria();
+        return (List<AppUser>) bean.buildCriteria(criteria).list();
     }
 
     public AppUser findByApprovementCode(String code) {
