@@ -109,6 +109,60 @@
     <c:if test="${not empty user}">
     <section id="form">
         <div class="container">
+            <div class="col-md-12 align-center">
+                <h2><spring:message code="want.learn"/></h2>
+            </div>
+            <div class="col-md-4">
+                <form:select path="interested[0]" id="interested1" class="form-control">
+                    <option value="not"
+                            <c:if test="${'not'.equals(appUser.interested[0])}">
+                                selected
+                            </c:if>
+                    >-<spring:message code="select"/>-</option>
+                    <c:forEach var="elem" items="${languages}">
+                        <option value="${elem.code}"
+                                <c:if test="${elem.code.equals(appUser.interested[0])}">
+                                    selected
+                                </c:if>
+                        > ${elem.name} </option>
+                    </c:forEach>
+                </form:select>
+            </div>
+            <div class="col-md-4">
+                <form:select path="interested[1]" id="interested2" class="form-control">
+                    <option value="not"
+                            <c:if test="${'not'.equals(appUser.interested[1])}">
+                                selected
+                            </c:if>
+                    >-<spring:message code="select"/>-</option>
+                    <c:forEach var="elem" items="${languages}">
+                        <option value="${elem.code}"
+                                <c:if test="${elem.code.equals(appUser.interested[1])}">
+                                    selected
+                                </c:if>
+                        > ${elem.name} </option>
+                    </c:forEach>
+                </form:select>
+            </div>
+            <div class="col-md-4">
+                <form:select path="interested[2]" id="interested3" class="form-control">
+                    <option value="not"
+                            <c:if test="${'not'.equals(appUser.interested[2])}">
+                                selected
+                            </c:if>
+                    >-<spring:message code="select"/>-</option>
+                    <c:forEach var="elem" items="${languages}">
+                        <option value="${elem.code}"
+                                <c:if test="${elem.code.equals(appUser.interested[2])}">
+                                    selected
+                                </c:if>
+                        > ${elem.name} </option>
+                    </c:forEach>
+                </form:select>
+            </div>
+            <div class="col-md-12 align-center">
+                <h2><spring:message code="like"/></h2>
+            </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <h2 class="align-right form-simple-text"><spring:message code="music"/></h2>
@@ -172,4 +226,3 @@
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>
 
 </body>
-</html>

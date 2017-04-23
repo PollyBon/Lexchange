@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.nure.dao.AppUserDao;
 import ua.nure.model.AppUser;
+import ua.nure.model.bean.SearchBean;
 import ua.nure.service.AppUserService;
 
 import java.util.List;
@@ -18,6 +19,10 @@ public class AppUserServiceImpl implements AppUserService {
 
     public AppUser findById(long id) {
         return dao.findById(id);
+    }
+
+    public List<AppUser> findByCriteria(SearchBean bean) {
+        return dao.findByCriteria(bean);
     }
 
     public AppUser findByApprovementCode(String code) {
@@ -47,7 +52,6 @@ public class AppUserServiceImpl implements AppUserService {
             user.setNativeLanguage(appUser.getNativeLanguage());
             user.setPassword(appUser.getPassword());
             user.setUrl(appUser.getUrl());
-            user.setRole(appUser.getRole());
             user.setArt(appUser.getArt());
             user.setMusic(appUser.getMusic());
             user.setTrips(appUser.getTrips());
@@ -57,6 +61,7 @@ public class AppUserServiceImpl implements AppUserService {
             user.setSport(appUser.getSport());
             user.setPolitics(appUser.getPolitics());
             user.setChats(appUser.getChats());
+            user.setInterestedIn(appUser.getInterestedIn());
         }
     }
 

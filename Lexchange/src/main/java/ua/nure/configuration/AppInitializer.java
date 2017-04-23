@@ -7,6 +7,7 @@ import javax.servlet.ServletRegistration;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+import ua.nure.model.enumerated.Age;
 import ua.nure.model.enumerated.Country;
 import ua.nure.model.enumerated.Language;
 
@@ -29,5 +30,6 @@ public class AppInitializer implements WebApplicationInitializer {
     private void setupContext(ServletContext context) {
         context.setAttribute("countries", Country.values());
         context.setAttribute("languages", Language.values());
+        context.setAttribute("ages", Age.values());
     }
 }

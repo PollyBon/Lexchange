@@ -18,6 +18,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.model.AppUser;
 import ua.nure.model.Employee;
+import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
 import ua.nure.service.EmployeeService;
@@ -40,6 +41,20 @@ public class AppController {
     @Autowired
     MessageSource messageSource;
 
+
+    @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
+    public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if(user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+            model.addAttribute("appUser", new AppUser());
+            return "cabinet";
+        }
+        searchBean.setService(appUserService);
+        searchBean.setCurrentUser(user);
+        model.addAttribute("searchBean", searchBean);
+
+        return "search";
+    }
 
     @RequestMapping(value = {"/cabinet"}, method = RequestMethod.GET)
     public String openCabinet(ModelMap model, HttpSession session) {
@@ -117,6 +132,11 @@ public class AppController {
         } else {
             return "redirect: cabinet";
         }
+    }
+
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    public String getLogin() {
+        return "index";
     }
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)

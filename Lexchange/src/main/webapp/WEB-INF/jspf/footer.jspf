@@ -1,5 +1,5 @@
 <footer id="footer">
-    <a name = "footer"/>
+    <a name = "footer"></a>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 text-center bottom-separator">
@@ -32,3 +32,4 @@
         </div>
     </div>
 </footer>
+</html>
