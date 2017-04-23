@@ -1,5 +1,6 @@
 package ua.nure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -78,6 +79,7 @@ public class AppUser {
     private String[] interested;
 
     @ManyToMany(mappedBy = "users")
+    @JsonIgnore
     private List<Chat> chats;
 
     private String approvementCode;

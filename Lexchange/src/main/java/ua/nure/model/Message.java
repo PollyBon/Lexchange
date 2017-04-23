@@ -1,5 +1,6 @@
 package ua.nure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
@@ -21,10 +22,12 @@ public class Message {
 
     @NotNull
     @ManyToOne
+    @JsonIgnore
     private AppUser user;
 
     @NotNull
     @ManyToOne
+    @JsonIgnore
     private Chat chat;
 
     @NotNull

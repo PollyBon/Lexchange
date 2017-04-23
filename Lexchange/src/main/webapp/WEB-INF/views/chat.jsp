@@ -9,6 +9,9 @@
 <head>
     <title>Chat</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="resources/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="resources/js/knockout-2.0.0.js"></script>
+    <script type="text/javascript" src="resources/js/chat.js"></script>
 
 </head>
 <body>
@@ -17,7 +20,7 @@
 <form id="joinChatForm" method="GET" action="chat" data-bind="visible: activePollingXhr() == null">
     <input id="userName" name="userName" type="hidden" value="${user.firstName}" data-bind="value: userName"/>
     <input id="chatId" name="chatId" type="hidden" value="${1}" data-bind="value: chatId"/>
-    <button id="start" type="submit" data-bind="lick: joinChat">Join chat</button>
+    <button id="start" type="submit" data-bind="click: joinChat">Join chat</button>
 </form>
 
 <form id="leaveChatForm" action="chat" data-bind="visible: activePollingXhr() != null">
@@ -39,9 +42,5 @@
     </p>
 </form>
 </body>
-
-<script type="text/javascript" src="resources/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="resources/js/knockout-2.0.0.js"></script>
-<script type="text/javascript" src="resources/js/chat.js"></script>
 
 </html>

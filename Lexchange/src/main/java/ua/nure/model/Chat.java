@@ -1,5 +1,7 @@
 package ua.nure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -15,6 +17,7 @@ public class Chat {
     private boolean active;
 
     @ManyToMany
+    @JsonIgnore
     private List<AppUser> users;
 
     public long getId() {
@@ -67,7 +70,6 @@ public class Chat {
         return "Chat{" +
                 "id=" + id +
                 ", active=" + active +
-                ", users=" + users +
                 '}';
     }
 }

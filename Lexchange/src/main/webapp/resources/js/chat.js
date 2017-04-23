@@ -5,14 +5,15 @@ $(document).ready(function () {
         var that = this;
 
         that.userName = ko.observable('');
-        that.chatId = ko.observable(1);
+        that.chatId = ko.observable(0);
         that.chatContent = ko.observable('');
         that.messageText = ko.observable('');
         that.activePollingXhr = ko.observable(null);
 
-        var keepPolling = true;
+        var keepPolling = false;
 
         that.joinChat = function () {
+            keepPolling = true;
             pollForMessages();
         };
 
@@ -24,12 +25,14 @@ $(document).ready(function () {
             that.activePollingXhr($.ajax({
                 url: form.attr("action"),
                 type: "GET",
-                data: $("#joinChatForm input[name=chatId]").val(),
+                dataType: "json",
+                data: "chatId=1",  //$("#joinChatForm input[name=chatId]")
                 cache: false,
-                success: function (messages) {
-                    for (var i = 0; i < messages.length; i++) {
-                        that.chatContent(that.chatContent() + messages[i] + "\n");
+                success: function (messageList) {
+                    for (var i = 0; i < messageList.length; i++) {
+                        that.chatContent(that.chatContent() + JSON.stringify(messageList[i]) + "\n");
                     }
+                    keepPolling = false;
                 },
                 error: function (xhr) {
                     if (xhr.statusText != "abort" && xhr.status != 503) {
@@ -54,13 +57,13 @@ $(document).ready(function () {
                     }
                 });
                 that.messageText('');
+                keepPolling = true;
             }
         };
 
         that.leaveChat = function () {
             that.activePollingXhr(null);
             resetUI();
-            this.userName('');
         };
 
         function resetUI() {

@@ -1,16 +1,14 @@
 package ua.nure.controller;
 
 import org.joda.time.LocalDateTime;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ua.nure.model.AppUser;
 import ua.nure.model.Chat;
 import ua.nure.model.Employee;
@@ -189,11 +187,16 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
-    public List<Message> getMessages(@RequestParam long chatId) {
-        return messageService.findAllMessagesForChat(chatId);
+    @ResponseBody
+    public JSONArray getMessages(@RequestParam long chatId) {
+        List<Message> messageList = messageService.findAllMessagesForChat(chatId);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.addAll(messageList);
+        return jsonArray;
     }
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.POST)
+    @ResponseBody
     public void postMessage(@RequestParam String messageText, @RequestParam long chatId, HttpSession session) {
         Message message = new Message();
 
