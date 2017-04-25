@@ -188,21 +188,30 @@ public class AppController {
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
     @ResponseBody
-    public JSONArray getMessages(@RequestParam long chatId) {
-        List<Message> messageList = messageService.findAllMessagesForChat(chatId);
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.addAll(messageList);
-        return jsonArray;
+    public List<String> getMessages(@RequestParam long chatId) {
+        List<Message> messages = messageService.findAllMessagesForChat(chatId);
+        List<String> stringMessages = new ArrayList<>();
+        for (Message m: messages){
+            String sb = m.getUser().getFirstName() + ": " +
+                    m.getSendingTime().getYear() + "-" +
+                    m.getSendingTime().getMonthOfYear() + "-" +
+                    m.getSendingTime().getDayOfMonth() + " " +
+                    m.getSendingTime().getHourOfDay() + ":" +
+                    m.getSendingTime().getMinuteOfHour() + "    " +
+                    m.getContent() + System.lineSeparator();
+            stringMessages.add(sb);
+        }
+        return stringMessages;
     }
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.POST)
     @ResponseBody
-    public void postMessage(@RequestParam String messageText, @RequestParam long chatId, HttpSession session) {
+    public void postMessage(@RequestParam String messageText, @RequestParam String chatId, HttpSession session) {
         Message message = new Message();
 
         message.setSendingTime(new LocalDateTime());
         message.setContent(messageText);
-        message.setChat(chatService.findChatById(chatId));
+        message.setChat(chatService.findChatById(Long.valueOf(chatId)));
         message.setUser((AppUser) session.getAttribute("user"));
 
         messageService.createMessage(message);

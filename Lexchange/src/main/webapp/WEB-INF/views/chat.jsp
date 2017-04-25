@@ -18,14 +18,13 @@
 <h1>Chat</h1>
 
 <form id="joinChatForm" method="GET" action="chat" data-bind="visible: activePollingXhr() == null">
-    <input id="userName" name="userName" type="hidden" value="${user.firstName}" data-bind="value: userName"/>
-    <input id="chatId" name="chatId" type="hidden" value="${1}" data-bind="value: chatId"/>
+    <input id="chatId" name="chatId" type="hidden" value="${1}"/>
     <button id="start" type="submit" data-bind="click: joinChat">Join chat</button>
 </form>
 
 <form id="leaveChatForm" action="chat" data-bind="visible: activePollingXhr() != null">
     <p>
-        You're chatting as <strong data-bind="text: userName"></strong>
+        You're chatting as <strong>${user.firstName}</strong>
         <button id="leave" type="submit" data-bind="click: leaveChat">Leave Chat</button>
     </p>
 </form>
@@ -37,7 +36,7 @@
 <form id="postMessageForm" method="POST" action="chat" data-bind="visible: activePollingXhr() != null">
     <p>
         <input id="messageText" name="messageText" type="text" data-bind="value: messageText"/>
-        <input id="chatId" name="chatId" type="hidden" value="${1}" data-bind="value: chatId"/>
+        <input id="chatId" name="chatId" type="hidden" value="${1}"/>
         <button id="post" type="submit" data-bind="click: postMessage">Post</button>
     </p>
 </form>

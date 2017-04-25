@@ -4,12 +4,11 @@ $(document).ready(function () {
 
         var that = this;
 
-        that.userName = ko.observable('');
-        that.chatId = ko.observable(0);
         that.chatContent = ko.observable('');
         that.messageText = ko.observable('');
         that.activePollingXhr = ko.observable(null);
 
+        //var afterPoll = false;//WAS ADDED
         var keepPolling = false;
 
         that.joinChat = function () {
@@ -21,18 +20,24 @@ $(document).ready(function () {
             if (!keepPolling) {
                 return;
             }
+
+            //if (afterPoll){ //WAS ADDED
+            //    that.chatContent('');//WAS ADDED
+            //}//WAS ADDED
+
             var form = $("#joinChatForm");
             that.activePollingXhr($.ajax({
                 url: form.attr("action"),
                 type: "GET",
-                dataType: "json",
-                data: "chatId=1",  //$("#joinChatForm input[name=chatId]")
+                data: $("#chatId"),
                 cache: false,
                 success: function (messageList) {
+                    that.chatContent('');
                     for (var i = 0; i < messageList.length; i++) {
-                        that.chatContent(that.chatContent() + JSON.stringify(messageList[i]) + "\n");
+                        that.chatContent(that.chatContent() + messageList[i]);
                     }
-                    keepPolling = false;
+                    //keepPolling = false; //WAS ADDED
+                    //afterPoll = false; //WAS ADDED
                 },
                 error: function (xhr) {
                     if (xhr.statusText != "abort" && xhr.status != 503) {
@@ -51,13 +56,15 @@ $(document).ready(function () {
                 $.ajax({
                     url: form.attr("action"),
                     type: "POST",
-                    data: form.serialize(),
+                    data: $('#postMessageForm :input'),
                     error: function (xhr) {
                         console.error("Error posting chat message: status=" + xhr.status + ", statusText=" + xhr.statusText);
                     }
                 });
                 that.messageText('');
-                keepPolling = true;
+                //keepPolling = true; //WAS ADDED
+                //afterPoll = true; //WAS ADDED
+                //pollForMessages(); //WAS ADDED
             }
         };
 
