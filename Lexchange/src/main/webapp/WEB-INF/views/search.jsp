@@ -151,6 +151,9 @@
                                         <c:if test="${online.contains(elem.id)}">
                                             <img src="resources/images/online.ico" class="online-icon"/>
                                         </c:if>
+                                        <c:if test="${elem.haveInviteFrom(user.id)}">
+                                            <img src="resources/images/invite.png" class="invite-icon"/>
+                                        </c:if>
                                     </div>
                                     <div class="portfolio-view">
                                         <ul class="nav nav-pills">
@@ -199,6 +202,7 @@
                                     <img src="resources/images/flags/${elem.country.toLowerCase()}.png" class="flag">
                                     ${countries[0].getByCode(elem.country)}
                                 </h3>
+                                <hr/>
                                 <p class="header-3">
                                     <b><spring:message code="native.language"/>:</b> ${languages[1].getByCode(elem.nativeLanguage)}
                                 </p>
@@ -214,21 +218,24 @@
                                 <p class="header-3">
                                     <b><spring:message code="age"/>:</b> ${elem.age}
                                 </p>
-                                <div class="col-md-6 padding-top-10">
+                                <hr/>
+                                <div class="col-md-6">
                                     <b><spring:message code="music"/>:</b> ${elem.music}<br/>
                                     <b><spring:message code="sport"/>:</b> ${elem.sport}<br/>
                                     <b><spring:message code="art"/>:</b> ${elem.art}<br/>
                                     <b><spring:message code="trips"/>:</b> ${elem.trips}<br/>
                                 </div>
-                                <div class="col-md-6 padding-top-10">
+                                <div class="col-md-6">
                                     <b><spring:message code="politics"/>:</b> ${elem.politics}<br/>
                                     <b><spring:message code="science"/>:</b> ${elem.science}<br/>
                                     <b><spring:message code="religion"/>:</b> ${elem.religion}<br/>
                                     <b><spring:message code="games"/>:</b> ${elem.games}<br/>
                                 </div>
+                            </div>
+                            <div class="col-md-12">
                                 <div class="padding-top-20">
                                     <button class="btn btn-submit" onclick="location.href = 'invite?id=${elem.id}'; return false;">
-                                        <i class="fa fa-hand-peace-o"></i><spring:message code="invite"/>
+                                        <i class="fa fa-envelope-o"></i><spring:message code="invite"/>
                                     </button>
                                 </div>
                             </div>

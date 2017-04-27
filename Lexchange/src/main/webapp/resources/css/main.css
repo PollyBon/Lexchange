@@ -3136,6 +3136,16 @@ input[type=range]:focus::-ms-fill-upper {
     border-radius: 50% !important;
 }
 
+.invite-icon {
+    height: 40px !important;
+    width: 40px !important;
+    position: absolute !important;
+    bottom: 16px !important;
+    left: 16px !important;
+    border: 2px solid white !important;
+    border-radius: 50% !important;
+}
+
 .overlay {
     top: 0;
     right: 0;

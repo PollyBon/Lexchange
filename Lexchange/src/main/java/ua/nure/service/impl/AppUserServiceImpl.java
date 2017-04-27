@@ -62,6 +62,7 @@ public class AppUserServiceImpl implements AppUserService {
             user.setPolitics(appUser.getPolitics());
             user.setChats(appUser.getChats());
             user.setInterestedIn(appUser.getInterestedIn());
+            user.setInvites(appUser.getInvites());
         }
     }
 

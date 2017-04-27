@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.model.AppUser;
 import ua.nure.model.Employee;
+import ua.nure.model.Invite;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
@@ -40,6 +41,20 @@ public class AppController {
     @Autowired
     MessageSource messageSource;
 
+
+    @RequestMapping(value = {"/invite"}, method = RequestMethod.GET)
+    public String openSearch(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        AppUser toUser = appUserService.findById(id);
+        if(toUser != null && toUser.getId() != user.getId()) {
+            toUser.getInvites().add(new Invite(user.getId(), toUser));
+            appUserService.updateUser(toUser);
+        }
+        searchBean.setService(appUserService);
+        searchBean.setCurrentUser(user);
+        model.addAttribute("searchBean", searchBean);
+        return "search";
+    }
 
     @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
     public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
