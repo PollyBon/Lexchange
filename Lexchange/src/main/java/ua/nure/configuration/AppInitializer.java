@@ -11,6 +11,8 @@ import ua.nure.model.enumerated.Age;
 import ua.nure.model.enumerated.Country;
 import ua.nure.model.enumerated.Language;
 
+import java.util.ArrayList;
+
 public class AppInitializer implements WebApplicationInitializer {
 
 	public void onStartup(ServletContext container) throws ServletException {
@@ -31,5 +33,6 @@ public class AppInitializer implements WebApplicationInitializer {
         context.setAttribute("countries", Country.values());
         context.setAttribute("languages", Language.values());
         context.setAttribute("ages", Age.values());
+		context.setAttribute("online", new ArrayList<Long>());
     }
 }

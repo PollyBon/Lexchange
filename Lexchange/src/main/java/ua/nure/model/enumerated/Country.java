@@ -268,6 +268,12 @@ public enum Country {
                 .findAny().get();
     }
 
+    public Country getByCode(String code) {
+        return Arrays.asList(values()).stream()
+                .filter(c -> c.getCode().equals(code))
+                .findAny().get();
+    }
+
     public String getCode() {
         return code;
     }

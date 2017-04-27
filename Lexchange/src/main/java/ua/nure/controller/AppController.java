@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Random;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -87,6 +86,7 @@ public class AppController {
             appUserService.createOrUpdate(appUser);
 
             session.setAttribute("user", appUser);
+            ((List<Long>)session.getServletContext().getAttribute("online")).add(appUser.getId());
         }
         return "cabinet";
     }
@@ -107,6 +107,7 @@ public class AppController {
             user.setRole(Role.USER);
             appUserService.updateUser(user);
             session.setAttribute("user", user);
+            ((List<Long>)session.getServletContext().getAttribute("online")).add(user.getId());
             model.addAttribute("appUser", user);
             return "cabinet";
         }
@@ -128,6 +129,7 @@ public class AppController {
         AppUser appUser = appUserService.findUserByEmail(email);
         if (appUser != null && appUser.getPassword().equals(password)) {
             session.setAttribute("user", appUser);
+            ((List<Long>)session.getServletContext().getAttribute("online")).add(appUser.getId());
             return "index";
         } else {
             return "redirect: cabinet";
@@ -141,7 +143,7 @@ public class AppController {
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
     public String logout(HttpSession session) {
-        session.removeAttribute("user");
+        session.invalidate();
         return "index";
     }
 
