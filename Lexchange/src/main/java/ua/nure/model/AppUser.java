@@ -12,6 +12,7 @@ import ua.nure.model.enumerated.Role;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -75,10 +76,13 @@ public class AppUser {
 
     private String interestedIn;
 
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    private List<Invite> invites;
+
     @Transient
     private String[] interested;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", cascade=CascadeType.ALL)
     @JsonIgnore
     private List<Chat> chats;
 
@@ -279,6 +283,22 @@ public class AppUser {
 
     public void setInterested(String[] interested) {
         this.interested = interested;
+    }
+
+    public List<Invite> getInvites() {
+        if (invites == null) {
+            setInvites(new ArrayList<>());
+        }
+        return invites;
+    }
+
+    public void setInvites(List<Invite> invites) {
+        this.invites = invites;
+    }
+
+    public boolean haveInviteFrom(Long id) {
+        return getInvites().stream()
+                .anyMatch(i -> i.getFromUserId() == id);
     }
 
     @Override

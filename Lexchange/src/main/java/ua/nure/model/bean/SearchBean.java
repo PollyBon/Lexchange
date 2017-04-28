@@ -54,7 +54,7 @@ public class SearchBean {
             criteria.add(Restrictions.eq("country", country));
         }
         if(!interestedIn.equals("not")) {
-            criteria.add(Restrictions.like("interestedIn", interestedIn));
+            criteria.add(Restrictions.ilike("interestedIn", interestedIn, MatchMode.ANYWHERE));
         }
         if(!age.equals("not")) {
             addAgeCriteria(criteria);
@@ -62,8 +62,8 @@ public class SearchBean {
         if(!stringCriteria.isEmpty()) {
             criteria.add(Restrictions.or(
                     Restrictions.ilike("firstName", stringCriteria, MatchMode.ANYWHERE),
-                    Restrictions.like("email", stringCriteria, MatchMode.ANYWHERE),
-                    Restrictions.like("lastName", stringCriteria, MatchMode.ANYWHERE)));
+                    Restrictions.ilike("email", stringCriteria, MatchMode.ANYWHERE),
+                    Restrictions.ilike("lastName", stringCriteria, MatchMode.ANYWHERE)));
         }
         return criteria;
     }

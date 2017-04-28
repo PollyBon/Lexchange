@@ -71,10 +71,10 @@
                 </ul>
             </div>
             <div class="search">
-                <form role="form">
+                <form action="search" method="get">
                     <i class="fa fa-search"></i>
                     <div class="field-toggle">
-                        <input type="text" class="search-form" autocomplete="off" placeholder="Search">
+                        <input type="text" name="stringCriteria" class="search-form" autocomplete="off" placeholder="<spring:message code="search"/>">
                     </div>
                 </form>
             </div>

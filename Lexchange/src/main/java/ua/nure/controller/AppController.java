@@ -1,17 +1,21 @@
 package ua.nure.controller;
 
 import org.joda.time.LocalDateTime;
-import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.nure.model.AppUser;
 import ua.nure.model.Chat;
 import ua.nure.model.Employee;
+import ua.nure.model.Invite;
 import ua.nure.model.Message;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
@@ -24,7 +28,10 @@ import ua.nure.util.Sender;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 
 @Controller
@@ -50,10 +57,24 @@ public class AppController {
     ChatService chatService;
 
 
+    @RequestMapping(value = {"/invite"}, method = RequestMethod.GET)
+    public String openSearch(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        AppUser toUser = appUserService.findById(id);
+        if (toUser != null && toUser.getId() != user.getId()) {
+            toUser.getInvites().add(new Invite(user.getId(), toUser));
+            appUserService.updateUser(toUser);
+        }
+        searchBean.setService(appUserService);
+        searchBean.setCurrentUser(user);
+        model.addAttribute("searchBean", searchBean);
+        return "search";
+    }
+
     @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
     public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
-        if(user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+        if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
             model.addAttribute("appUser", new AppUser());
             return "cabinet";
         }
@@ -95,6 +116,7 @@ public class AppController {
             appUserService.createOrUpdate(appUser);
 
             session.setAttribute("user", appUser);
+            ((List<Long>) session.getServletContext().getAttribute("online")).add(appUser.getId());
         }
         return "cabinet";
     }
@@ -115,6 +137,7 @@ public class AppController {
             user.setRole(Role.USER);
             appUserService.updateUser(user);
             session.setAttribute("user", user);
+            ((List<Long>) session.getServletContext().getAttribute("online")).add(user.getId());
             model.addAttribute("appUser", user);
             return "cabinet";
         }
@@ -136,6 +159,7 @@ public class AppController {
         AppUser appUser = appUserService.findUserByEmail(email);
         if (appUser != null && appUser.getPassword().equals(password)) {
             session.setAttribute("user", appUser);
+            ((List<Long>) session.getServletContext().getAttribute("online")).add(appUser.getId());
             return "index";
         } else {
             return "redirect: cabinet";
@@ -149,7 +173,7 @@ public class AppController {
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
     public String logout(HttpSession session) {
-        session.removeAttribute("user");
+        session.invalidate();
         return "index";
     }
 
@@ -161,7 +185,7 @@ public class AppController {
 
     ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
     @RequestMapping(value = "/chatPage", method = RequestMethod.GET)
-    public String getChatPage(){
+    public String getChatPage() {
         return "chat";
     }
 
@@ -191,7 +215,7 @@ public class AppController {
     public List<String> getMessages(@RequestParam long chatId) {
         List<Message> messages = messageService.findAllMessagesForChat(chatId);
         List<String> stringMessages = new ArrayList<>();
-        for (Message m: messages){
+        for (Message m : messages) {
             String sb = m.getUser().getFirstName() + ": " +
                     m.getSendingTime().getYear() + "-" +
                     m.getSendingTime().getMonthOfYear() + "-" +

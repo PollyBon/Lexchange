@@ -17,25 +17,26 @@ import java.util.HashMap;
 
 public class AppInitializer implements WebApplicationInitializer {
 
-	public void onStartup(ServletContext container) throws ServletException {
+    public void onStartup(ServletContext container) throws ServletException {
 
-		AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-		ctx.register(AppConfig.class);
+        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx.register(AppConfig.class);
         setupContext(container);
-		ctx.setServletContext(container);
+        ctx.setServletContext(container);
 
-		ServletRegistration.Dynamic servlet = container.addServlet(
-				"dispatcher", new DispatcherServlet(ctx));
+        ServletRegistration.Dynamic servlet = container.addServlet(
+                "dispatcher", new DispatcherServlet(ctx));
 
-		servlet.setLoadOnStartup(1);
-		servlet.addMapping("/");
-		servlet.setAsyncSupported(true);
-	}
+        servlet.setLoadOnStartup(1);
+        servlet.addMapping("/");
+        servlet.setAsyncSupported(true);
+    }
 
     private void setupContext(ServletContext context) {
         context.setAttribute("countries", Country.values());
         context.setAttribute("languages", Language.values());
         context.setAttribute("ages", Age.values());
         context.setAttribute("chatUserMessages", new HashMap<AppUserChatBean, ArrayList<Message>>());
+        context.setAttribute("online", new ArrayList<Long>());
     }
 }
