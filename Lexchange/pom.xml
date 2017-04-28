@@ -176,6 +176,7 @@
     <!--CHAT-->
 
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -201,16 +202,17 @@
             </plugin>
 
             <!--FOR COMMUNITY-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.tomcat.maven</groupId>-->
-                <!--<artifactId>tomcat8-maven-plugin</artifactId>-->
-                <!--<version>2.2</version>-->
-                <!--<configuration>-->
-                    <!--<url>http://localhost:8080/lexchange</url>-->
-                    <!--<server>localhost</server>-->
-                    <!--<path>/${project.build.finalName}</path>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://localhost:8080/manager/text</url>
+                    <path>/lexchange</path>
+                    <username>tomcat</username>
+                    <password>1111</password>
+                </configuration>
+            </plugin>
             <!--FOR COMMUNITY-->
             
         </plugins>

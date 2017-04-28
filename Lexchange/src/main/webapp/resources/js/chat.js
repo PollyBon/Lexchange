@@ -8,23 +8,31 @@ $(document).ready(function () {
         that.messageText = ko.observable('');
         that.activePollingXhr = ko.observable(null);
 
-        //var afterPoll = false;//WAS ADDED
-        var keepPolling = false;
-
         that.joinChat = function () {
-            keepPolling = true;
-            pollForMessages();
+             var form = $("#joinChatForm");
+             that.activePollingXhr($.ajax({
+                url: form.attr("action"),
+                type: "GET",
+                data: $("#chatId"),
+                cache: false,
+                success: function (messageList) {
+                    for (var i = 0; i < messageList.length; i++) {
+                        that.chatContent(that.chatContent() + messageList[i]);
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.statusText != "abort" && xhr.status != 503) {
+                        resetUI();
+                        console.error("Unable to retrieve chat messages. Chat ended.");
+                    }
+                }
+             }));
+
+             $('#messageText').focus();
+             pollForMessages();
         };
 
         function pollForMessages() {
-            if (!keepPolling) {
-                return;
-            }
-
-            //if (afterPoll){ //WAS ADDED
-            //    that.chatContent('');//WAS ADDED
-            //}//WAS ADDED
-
             var form = $("#joinChatForm");
             that.activePollingXhr($.ajax({
                 url: form.attr("action"),
@@ -32,12 +40,10 @@ $(document).ready(function () {
                 data: $("#chatId"),
                 cache: false,
                 success: function (messageList) {
-                    that.chatContent('');
                     for (var i = 0; i < messageList.length; i++) {
                         that.chatContent(that.chatContent() + messageList[i]);
                     }
-                    //keepPolling = false; //WAS ADDED
-                    //afterPoll = false; //WAS ADDED
+                    keepPolling = false; //WAS ADDED
                 },
                 error: function (xhr) {
                     if (xhr.statusText != "abort" && xhr.status != 503) {
@@ -49,6 +55,7 @@ $(document).ready(function () {
             }));
             $('#messageText').focus();
         }
+
 
         that.postMessage = function () {
             if (that.messageText().trim() != '') {
@@ -62,9 +69,7 @@ $(document).ready(function () {
                     }
                 });
                 that.messageText('');
-                //keepPolling = true; //WAS ADDED
-                //afterPoll = true; //WAS ADDED
-                //pollForMessages(); //WAS ADDED
+                keepPolling = true; //WAS ADDED
             }
         };
 

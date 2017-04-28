@@ -17,6 +17,7 @@ import ua.nure.model.Chat;
 import ua.nure.model.Employee;
 import ua.nure.model.Invite;
 import ua.nure.model.Message;
+import ua.nure.model.bean.AppUserChatBean;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
@@ -29,6 +30,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -184,7 +186,7 @@ public class AppController {
 
 
     ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
-    @RequestMapping(value = "/chatPage", method = RequestMethod.GET)
+    @RequestMapping(value = "/enterChat", method = RequestMethod.GET)
     public String getChatPage() {
         return "chat";
     }
@@ -239,6 +241,21 @@ public class AppController {
         message.setUser((AppUser) session.getAttribute("user"));
 
         messageService.createMessage(message);
+
+    }
+
+    private void setMessageToContextMap(HttpSession session, Message message, long chatId){
+        AppUser user = (AppUser) session.getAttribute("user");
+        AppUserChatBean bean = new AppUserChatBean(chatId, user.getId());
+        HashMap<AppUserChatBean, ArrayList<Message>> messageMap = (HashMap<AppUserChatBean, ArrayList<Message>>)
+                session.getServletContext().getAttribute("chatUserMessages");
+        List<Message> messageList = messageMap.get(bean);
+
+        if (messageList == null){
+            messageList = new ArrayList<>();
+            messageList.add(message);
+            messageMap.put(bean, messageList);
+        }
     }
 
 //    private final ChatRepository chatRepository = new InMemoryChatRepository();

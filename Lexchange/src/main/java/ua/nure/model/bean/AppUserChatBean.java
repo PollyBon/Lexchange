@@ -4,11 +4,15 @@ import java.io.Serializable;
 
 public class AppUserChatBean implements Serializable {
 
-
+    private static final long serialVersionUID = -8172940343036502076L;
 
     private long chatId;
-
     private long appUserId;
+
+    public AppUserChatBean(long chatId, long appUserId) {
+        this.chatId = chatId;
+        this.appUserId = appUserId;
+    }
 
     public long getChatId() {
         return chatId;

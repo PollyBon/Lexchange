@@ -36,7 +36,9 @@ public class AppInitializer implements WebApplicationInitializer {
         context.setAttribute("countries", Country.values());
         context.setAttribute("languages", Language.values());
         context.setAttribute("ages", Age.values());
+
         context.setAttribute("chatUserMessages", new HashMap<AppUserChatBean, ArrayList<Message>>());
+
         context.setAttribute("online", new ArrayList<Long>());
     }
 }
