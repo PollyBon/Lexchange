@@ -122,11 +122,13 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
             <version>2.3.1</version>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
@@ -138,6 +140,7 @@
             <artifactId>postgresql</artifactId>
             <version>${postgre.version}</version>
         </dependency>
+
     </dependencies>
 
     <!--CHAT-->
@@ -155,8 +158,12 @@
         <repository>
             <id>SpringSource snapshot repository</id>
             <url>http://repo.springsource.org/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
-            <releases><enabled>false</enabled></releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
     </repositories>
 
@@ -192,6 +199,20 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+            <!--FOR COMMUNITY-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.tomcat.maven</groupId>-->
+                <!--<artifactId>tomcat8-maven-plugin</artifactId>-->
+                <!--<version>2.2</version>-->
+                <!--<configuration>-->
+                    <!--<url>http://localhost:8080/lexchange</url>-->
+                    <!--<server>localhost</server>-->
+                    <!--<path>/${project.build.finalName}</path>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--FOR COMMUNITY-->
+            
         </plugins>
         <finalName>lexchange</finalName>
     </build>

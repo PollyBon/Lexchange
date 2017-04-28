@@ -1,15 +1,19 @@
 package ua.nure.configuration;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+import ua.nure.model.Message;
+import ua.nure.model.bean.AppUserChatBean;
 import ua.nure.model.enumerated.Age;
 import ua.nure.model.enumerated.Country;
 import ua.nure.model.enumerated.Language;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AppInitializer implements WebApplicationInitializer {
 
@@ -32,5 +36,6 @@ public class AppInitializer implements WebApplicationInitializer {
         context.setAttribute("countries", Country.values());
         context.setAttribute("languages", Language.values());
         context.setAttribute("ages", Age.values());
+        context.setAttribute("chatUserMessages", new HashMap<AppUserChatBean, ArrayList<Message>>());
     }
 }
