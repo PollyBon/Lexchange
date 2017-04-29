@@ -8,6 +8,7 @@
 
 <a name="search"></a>
 <form:form method="GET" modelAttribute="searchBean">
+    <button class="hidden"></button>
     <section id="page-breadcrumb">
         <div class="vertical-center sun">
             <div class="container">
@@ -243,28 +244,38 @@
                         </div>
                     </c:forEach>
                 </div>
-                <div class="col-md-12">
-                    <div class="col-md-4">
-                        <form:input path="stringCriteria" class="form-control" onchange="submit()"/>
-                    </div>
-                    <div class="col-md-4 align-center">
-                        <ul class="pagination">
-                            <li>
-                                <a href="${requestScope['javax.servlet.forward.request_uri']}?currentPage=${searchBean.currentPage-1}&${requestScope['javax.servlet.forward.query_string']}#search">left</a>
-                            </li>
-                            <c:forEach var="elem" items="${searchBean.pages}">
-                                <li
-                                        <c:if test="${elem.equals(searchBean.currentPage)}">class="active"</c:if> >
-                                    <a href="${requestScope['javax.servlet.forward.request_uri']}?currentPage=${elem}&${requestScope['javax.servlet.forward.query_string']}#search">${elem}</a>
-                                </li>
-                            </c:forEach>
-                            <li>
-                                <a href="${requestScope['javax.servlet.forward.request_uri']}?currentPage=${searchBean.currentPage+1}&${requestScope['javax.servlet.forward.query_string']}#search">right</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="reset" onclick="location.href = 'search#search';" class="btn btn-reset" value="<spring:message code="clear"/>">
+            </div>
+        </div>
+    </section>
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+            <div class="container">
+                <div class="row">
+                    <div class="action">
+                        <div class="col-sm-12">
+                            <div class="col-md-4">
+                                <form:input path="stringCriteria" class="form-control" onchange="submit()"/>
+                            </div>
+                            <div class="col-md-4 align-center">
+                                <ul class="pagination">
+                                    <li>
+                                        <a href="${requestScope['javax.servlet.forward.request_uri']}?currentPage=${searchBean.currentPage-1}&${requestScope['javax.servlet.forward.query_string']}#search">left</a>
+                                    </li>
+                                    <c:forEach var="elem" items="${searchBean.pages}">
+                                        <li
+                                                <c:if test="${elem.equals(searchBean.currentPage)}">class="active"</c:if> >
+                                            <a href="${requestScope['javax.servlet.forward.request_uri']}?currentPage=${elem}&${requestScope['javax.servlet.forward.query_string']}#search">${elem}</a>
+                                        </li>
+                                    </c:forEach>
+                                    <li>
+                                        <a href="${requestScope['javax.servlet.forward.request_uri']}?currentPage=${searchBean.currentPage+1}&${requestScope['javax.servlet.forward.query_string']}#search">right</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="reset" onclick="location.href = 'search#search';" class="btn btn-reset" value="<spring:message code="clear"/>">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

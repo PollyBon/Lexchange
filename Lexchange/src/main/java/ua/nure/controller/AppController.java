@@ -1,8 +1,6 @@
 package ua.nure.controller;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
@@ -16,11 +14,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.model.AppUser;
+import ua.nure.model.Chat;
 import ua.nure.model.Employee;
 import ua.nure.model.Invite;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
+import ua.nure.service.ChatService;
 import ua.nure.service.EmployeeService;
 import ua.nure.util.Sender;
 
@@ -36,17 +36,46 @@ public class AppController {
     AppUserService appUserService;
 
     @Autowired
+    ChatService chatService;
+
+    @Autowired
     Sender sender;
 
     @Autowired
     MessageSource messageSource;
 
 
+    @RequestMapping(value = {"/chats"}, method = RequestMethod.GET)
+    public String openSearch(ModelMap model, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if(!validateRoles(user, model)) {
+            return "cabinet";
+        }
+        List<Chat> chats = chatService.findAllChatsByUserId(user.getId(), true);
+        for(Chat chat : chats) {
+            chat.getUsers().remove(user);
+        }
+        model.addAttribute("chats", chats);
+
+        Map<Long, AppUser> invitations = new HashMap<>();
+        for (Invite invite: user.getInvites()) {
+            long id = invite.getFromUserId();
+            invitations.put(id, appUserService.findById(id));
+        }
+        model.addAttribute("invitations", invitations);
+
+        return "chats";
+    }
+
     @RequestMapping(value = {"/invite"}, method = RequestMethod.GET)
     public String openSearch(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
+        if(!validateRoles(user, model)) {
+            return "cabinet";
+        }
         AppUser toUser = appUserService.findById(id);
-        if(toUser != null && toUser.getId() != user.getId()) {
+        if(toUser != null && toUser.getId() != user.getId()
+                && !toUser.haveInviteFrom(user.getId())) {
             toUser.getInvites().add(new Invite(user.getId(), toUser));
             appUserService.updateUser(toUser);
         }
@@ -59,8 +88,7 @@ public class AppController {
     @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
     public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
-        if(user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
-            model.addAttribute("appUser", new AppUser());
+        if(!validateRoles(user, model)) {
             return "cabinet";
         }
         searchBean.setService(appUserService);
@@ -168,6 +196,13 @@ public class AppController {
     }
 
 
+    private boolean validateRoles(AppUser user, ModelMap model) {
+        if(user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+            model.addAttribute("appUser", new AppUser());
+            return false;
+        }
+        return true;
+    }
     /////////////////////////////////////////////////////////////----OLD----///----CONTROLLER----////////////////////////
 
 

@@ -12,5 +12,7 @@ public interface ChatService {
 
     List<Chat> findAllChatsByUserId(long userId);
 
+    List<Chat> findAllChatsByUserId(long userId, boolean fetchUsers);
+
     Chat findChatById(long chatId);
 }
