@@ -17,6 +17,13 @@ public class Chat {
     @ManyToMany
     private List<AppUser> users;
 
+    public Chat() {}
+
+    public Chat(List<AppUser> users) {
+        this.active = true;
+        this.users = users;
+    }
+
     public long getId() {
         return id;
     }
@@ -67,7 +74,6 @@ public class Chat {
         return "Chat{" +
                 "id=" + id +
                 ", active=" + active +
-                ", users=" + users +
                 '}';
     }
 }

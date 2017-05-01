@@ -1,6 +1,7 @@
 package ua.nure.controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
@@ -44,21 +45,49 @@ public class AppController {
     @Autowired
     MessageSource messageSource;
 
+    @RequestMapping(value = {"/accept"}, method = RequestMethod.GET)
+    public String acceptInvite(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Optional<Invite> optional = user.getInvites().stream()
+                .filter(i -> i.getId() == id)
+                .findFirst();
+        if (!optional.isPresent()) {
+            return "error";
+        }
+        Invite invite = optional.get();
+        user.getInvites().remove(invite);
+        appUserService.updateUser(user);
+        createChat(user.getId(), invite.getFromUserId());
+        return "chat"; //ToDo: replace with chat?id= method call
+    }
+
+    private Long createChat(Long... ids) {
+        List<AppUser> users = Arrays.asList(ids).stream()
+                .map(id -> appUserService.findById(id, true)).collect(Collectors.toList());
+        Chat chat = new Chat(users);
+        users.forEach(u -> u.getChats().add(chat));
+        users.forEach(appUserService::updateUser);
+        return chat.getId();
+    }
 
     @RequestMapping(value = {"/chats"}, method = RequestMethod.GET)
-    public String openSearch(ModelMap model, HttpSession session) {
+    public String openChats(ModelMap model, HttpSession session) {
         AppUser user = (AppUser) session.getAttribute("user");
-        if(!validateRoles(user, model)) {
+        if (!validateRoles(user, model)) {
             return "cabinet";
         }
         List<Chat> chats = chatService.findAllChatsByUserId(user.getId(), true);
-        for(Chat chat : chats) {
+        for (Chat chat : chats) {
             chat.getUsers().remove(user);
         }
         model.addAttribute("chats", chats);
 
         Map<Long, AppUser> invitations = new HashMap<>();
-        for (Invite invite: user.getInvites()) {
+        for (Invite invite : user.getInvites()) {
             long id = invite.getFromUserId();
             invitations.put(id, appUserService.findById(id));
         }
@@ -68,13 +97,13 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/invite"}, method = RequestMethod.GET)
-    public String openSearch(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
+    public String invite(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
-        if(!validateRoles(user, model)) {
+        if (!validateRoles(user, model)) {
             return "cabinet";
         }
         AppUser toUser = appUserService.findById(id);
-        if(toUser != null && toUser.getId() != user.getId()
+        if (toUser != null && toUser.getId() != user.getId()
                 && !toUser.haveInviteFrom(user.getId())) {
             toUser.getInvites().add(new Invite(user.getId(), toUser));
             appUserService.updateUser(toUser);
@@ -88,7 +117,7 @@ public class AppController {
     @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
     public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
-        if(!validateRoles(user, model)) {
+        if (!validateRoles(user, model)) {
             return "cabinet";
         }
         searchBean.setService(appUserService);
@@ -129,7 +158,7 @@ public class AppController {
             appUserService.createOrUpdate(appUser);
 
             session.setAttribute("user", appUser);
-            ((List<Long>)session.getServletContext().getAttribute("online")).add(appUser.getId());
+            ((List<Long>) session.getServletContext().getAttribute("online")).add(appUser.getId());
         }
         return "cabinet";
     }
@@ -146,21 +175,21 @@ public class AppController {
     @RequestMapping(value = {"/approve-{code}-code"}, method = RequestMethod.GET)
     public String editEmployee(@PathVariable String code, HttpSession session, ModelMap model) {
         AppUser user = appUserService.findByApprovementCode(code);
-        if(user != null) {
+        if (user != null) {
             user.setRole(Role.USER);
             appUserService.updateUser(user);
             session.setAttribute("user", user);
-            ((List<Long>)session.getServletContext().getAttribute("online")).add(user.getId());
+            ((List<Long>) session.getServletContext().getAttribute("online")).add(user.getId());
             model.addAttribute("appUser", user);
             return "cabinet";
         }
         return "index";
     }
 
-    private String generateUniqueCode(){
+    private String generateUniqueCode() {
         Random random = new Random();
         String temp = String.valueOf(random.nextInt());
-        if(appUserService.findByApprovementCode(temp) == null) {
+        if (appUserService.findByApprovementCode(temp) == null) {
             return temp;
         } else {
             return generateUniqueCode();
@@ -172,7 +201,7 @@ public class AppController {
         AppUser appUser = appUserService.findUserByEmail(email);
         if (appUser != null && appUser.getPassword().equals(password)) {
             session.setAttribute("user", appUser);
-            ((List<Long>)session.getServletContext().getAttribute("online")).add(appUser.getId());
+            ((List<Long>) session.getServletContext().getAttribute("online")).add(appUser.getId());
             return "index";
         } else {
             return "redirect: cabinet";
@@ -197,7 +226,7 @@ public class AppController {
 
 
     private boolean validateRoles(AppUser user, ModelMap model) {
-        if(user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+        if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
             model.addAttribute("appUser", new AppUser());
             return false;
         }

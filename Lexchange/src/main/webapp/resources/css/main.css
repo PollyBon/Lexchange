@@ -167,9 +167,18 @@ h3 {
 
 .avatar-chat {
     height: 260px;
+    width: 260px;
     margin: auto;
     border-radius:50%;
     border: 4px solid;
+}
+
+.avatar-ico {
+    height: 50px;
+    width: 50px;
+    margin: auto;
+    border-radius:50%;
+    border: 2px solid white;
 }
 
 .carousel-indicators.visible-xs {
@@ -3135,6 +3144,13 @@ input[type=range]:focus::-ms-fill-upper {
 
 .flag {
     border-radius: 30%;
+    border: 1px solid grey;
+    margin-bottom: 4px;
+}
+
+.flag-mini {
+    width: 21px;
+    height: 13px;
     border: 1px solid grey;
     margin-bottom: 4px;
 }

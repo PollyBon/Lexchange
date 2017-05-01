@@ -29,17 +29,43 @@
                 <table class="table table-hover padding-top">
                     <thead>
                     <tr>
-                        <th><h2><spring:message code="companion"/></h2></th>
-                        <th><h2><spring:message code="language"/></h2></th>
-                        <th></th>
+                        <th class="col-md-3"><h2><spring:message code="companion"/></h2></th>
+                        <th class="col-md-7"><h2><spring:message code="last.msg"/></h2></th>
+                        <th class="col-md-2"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="elem" items="${}">
-                        <tr onclick="location.href = '';">
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>john@example.com</td>
+                    <c:forEach var="elem" items="${chats}">
+                        <tr>
+                            <td onclick="location.href = 'chat?id=${elem.id}';">
+                                <div class="col-md-3">
+                                    <c:choose>
+                                        <c:when test="${empty elem.users.get(0).url}">
+                                            <img src="resources/images/blank-avatar.jpg" class="avatar-ico"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${elem.users.get(0).url}" class="avatar-ico"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                                <div class="col-md-9 inline header-3">
+                                    <img src="resources/images/flags/${elem.users.get(0).country.toLowerCase()}.png"
+                                         class="flag-mini"> ${elem.users.get(0).firstName} ${elem.users.get(0).lastName}<br/>
+                                        ${languages[1].getByCode(elem.users.get(0).nativeLanguage)}
+                                </div>
+                            </td>
+                            <td onclick="location.href = 'chat?id=${elem.id}';">${elem}</td>
+                                <%--ToDo: find last message--%>
+                            <td>
+                                <button class="btn btn-sm btn-warning"
+                                        onclick="location.href = 'leave?id=${elem.id}'; return false;">
+                                    <i class="fa fa-times"></i> <spring:message code="leave"/>
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="location.href = 'complain?id=${elem.id}'; return false;">
+                                    <i class="fa fa-exclamation-triangle"></i> <spring:message code="complain"/>
+                                </button>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -104,7 +130,8 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </li>
-                                                    <li><a href="decline?id=${invite.id}"><i class="fa fa-thumbs-o-down"></i></a></li>
+                                                    <li><a href="decline?id=${invite.id}"><i
+                                                            class="fa fa-thumbs-o-down"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -176,7 +203,7 @@
                         <div class="col-md-12">
                             <div class="padding-top-20">
                                 <button class="btn btn-submit"
-                                        onclick="location.href = 'invite?id=${elem.id}'; return false;">
+                                        onclick="location.href = 'accept?id=${invite.id}'; return false;">
                                     <i class="fa fa-check-circle"></i><spring:message code="accept"/>
                                 </button>
                             </div>
