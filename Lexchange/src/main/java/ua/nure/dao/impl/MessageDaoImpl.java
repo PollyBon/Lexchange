@@ -2,6 +2,7 @@ package ua.nure.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ua.nure.dao.AbstractDao;
@@ -27,6 +28,7 @@ public class MessageDaoImpl extends AbstractDao<Long, Message> implements Messag
     public List<Message> findAllMessagesForChat(long chatId) {
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("chat.id", chatId));
+        criteria.addOrder(Order.asc("id"));
         return (List<Message>) criteria.list();
     }
 }

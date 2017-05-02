@@ -1,5 +1,6 @@
 package ua.nure.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -7,33 +8,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import ua.nure.model.AppUser;
-import ua.nure.model.Chat;
-import ua.nure.model.Employee;
-import ua.nure.model.Invite;
-import ua.nure.model.Message;
-import ua.nure.model.bean.AppUserChatBean;
+import org.springframework.web.bind.annotation.*;
+import ua.nure.model.*;
+import ua.nure.model.Dictionary;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
-import ua.nure.service.AppUserService;
-import ua.nure.service.ChatService;
-import ua.nure.service.EmployeeService;
-import ua.nure.service.MessageService;
+import ua.nure.service.*;
+import ua.nure.util.JSONView;
 import ua.nure.util.Sender;
 
 import javax.mail.MessagingException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 
 @Controller
@@ -57,6 +45,12 @@ public class AppController {
 
     @Autowired
     ChatService chatService;
+
+    @Autowired
+    DictionaryService dictionaryService;
+
+    @Autowired
+    WordService wordService;
 
 
     @RequestMapping(value = {"/invite"}, method = RequestMethod.GET)
@@ -184,8 +178,35 @@ public class AppController {
         return "index";
     }
 
+    //////////////////////////////////DICTIONARY//////////////////////
 
-    ////////////DO NOT DISTURB!!!!//////////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
+    @RequestMapping(value = "/newComment", method = RequestMethod.POST)
+    public void updateWordComment(@RequestParam long wordId, @RequestParam String comment,
+                                    @RequestParam long dictionaryId, HttpSession session) {
+        Word word = wordService.findWordById(wordId);
+        Dictionary dictionary = dictionaryService.findDictionaryById(dictionaryId);
+        wordService.updateWordComment(wordId, comment);
+
+        AppUser user = (AppUser)(session.getAttribute("user"));
+
+        int wordPosition = dictionary.getWords().indexOf(word);
+        int dictionaryPosition = user.getDictionaries().indexOf(dictionary);
+
+        dictionary.getWords().remove(wordPosition);
+        user.getDictionaries().remove(dictionaryPosition);
+
+        word.setComment(comment);
+
+        dictionary.getWords().add(wordPosition, word );
+        user.getDictionaries().add(dictionaryPosition, dictionary);
+
+        session.setAttribute("user", user);
+    }
+
+    //////////////////////////////////DICTIONARY//////////////////////
+
+
+    //////////////////////////////////CHAT//////////////////////
     @RequestMapping(value = "/enterChat", method = RequestMethod.GET)
     public String getChatPage() {
         return "chat";
@@ -212,10 +233,39 @@ public class AppController {
         chatService.createChat(chat);
     }
 
+    @RequestMapping(value = {"/newMessages"}, method = RequestMethod.GET)
+    @ResponseBody
+    public List<String> getNewMessages(@RequestParam long chatId, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        AppUserChat appUserChat = new AppUserChat(chatId, user.getId());
+        ServletContext context = session.getServletContext();
+
+        HashMap<AppUserChat, ArrayList<Message>> messageMap = (HashMap<AppUserChat, ArrayList<Message>>)
+                context.getAttribute("chatUserMessages");
+        List<Message> messages = messageMap.get(appUserChat);
+        messageMap.put(appUserChat, new ArrayList<>());
+        context.setAttribute("chatUserMessages", messageMap);
+
+        return formatMessages(messages);
+    }
+
     @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
     @ResponseBody
-    public List<String> getMessages(@RequestParam long chatId) {
+    public List<String> getMessages(@RequestParam long chatId, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        AppUserChat appUserChat = new AppUserChat(chatId, user.getId());
+        ServletContext context = session.getServletContext();
+
+        HashMap<AppUserChat, ArrayList<Message>> messageMap = (HashMap<AppUserChat, ArrayList<Message>>)
+                context.getAttribute("chatUserMessages");
+        messageMap.put(appUserChat, new ArrayList<>());
+        context.setAttribute("chatUserMessages", messageMap);
+
         List<Message> messages = messageService.findAllMessagesForChat(chatId);
+        return formatMessages(messages);
+    }
+
+    private List<String> formatMessages(List<Message> messages) {
         List<String> stringMessages = new ArrayList<>();
         for (Message m : messages) {
             String sb = m.getUser().getFirstName() + ": " +
@@ -230,78 +280,43 @@ public class AppController {
         return stringMessages;
     }
 
+
     @RequestMapping(value = {"/chat"}, method = RequestMethod.POST)
     @ResponseBody
-    public void postMessage(@RequestParam String messageText, @RequestParam String chatId, HttpSession session) {
+    public void postMessage(@RequestParam String messageText, @RequestParam long chatId, HttpSession session) {
         Message message = new Message();
+        Chat chat = chatService.findChatById(chatId, true);
 
         message.setSendingTime(new LocalDateTime());
         message.setContent(messageText);
-        message.setChat(chatService.findChatById(Long.valueOf(chatId)));
+        message.setChat(chat);
         message.setUser((AppUser) session.getAttribute("user"));
 
         messageService.createMessage(message);
-
+        setMessageToContextMap(session, message, chat);
     }
 
-    private void setMessageToContextMap(HttpSession session, Message message, long chatId){
-        AppUser user = (AppUser) session.getAttribute("user");
-        AppUserChatBean bean = new AppUserChatBean(chatId, user.getId());
-        HashMap<AppUserChatBean, ArrayList<Message>> messageMap = (HashMap<AppUserChatBean, ArrayList<Message>>)
-                session.getServletContext().getAttribute("chatUserMessages");
-        List<Message> messageList = messageMap.get(bean);
+    private void setMessageToContextMap(HttpSession session, Message message, Chat chat) {
+        ServletContext context = session.getServletContext();
 
-        if (messageList == null){
-            messageList = new ArrayList<>();
+        HashMap<AppUserChat, ArrayList<Message>> messageMap = (HashMap<AppUserChat, ArrayList<Message>>)
+                context.getAttribute("chatUserMessages");
+        List<AppUser> usersOfChat = chat.getUsers();
+
+        for (AppUser us : usersOfChat) {
+            AppUserChat appUserChat = new AppUserChat(chat.getId(), us.getId());
+            ArrayList<Message> messageList = messageMap.get(appUserChat);
+            if (messageList == null) {
+                messageList = new ArrayList<>();
+                messageMap.put(appUserChat, messageList);
+            }
             messageList.add(message);
-            messageMap.put(bean, messageList);
         }
+
+        context.setAttribute("chatUserMessages", messageMap);
     }
 
-//    private final ChatRepository chatRepository = new InMemoryChatRepository();
-//
-//    private final Map<DeferredResult<List<String>>, Integer> chatRequests =
-//            new ConcurrentHashMap<DeferredResult<List<String>>, Integer>();
-//
-//
-//    @RequestMapping(value = "/chat", method = RequestMethod.GET)
-//    @ResponseBody
-//    public DeferredResult<List<String>> getMessages(@RequestParam int messageIndex) {
-//
-//        final DeferredResult<List<String>> deferredResult = new DeferredResult<List<String>>(null, Collections.emptyList());
-//        this.chatRequests.put(deferredResult, messageIndex);
-//
-//        deferredResult.onCompletion(new Runnable() {
-//            @Override
-//            public void run() {
-//                chatRequests.remove(deferredResult);
-//            }
-//        });
-//
-//        List<String> messages = this.chatRepository.getMessages(messageIndex);
-//        if (!messages.isEmpty()) {
-//            deferredResult.setResult(messages);
-//        }
-//
-//        return deferredResult;
-//    }
-//
-//    @RequestMapping(value = "/chat", method = RequestMethod.POST)
-//    @ResponseBody
-//    public void postMessage(@RequestParam String message) {
-//
-//        this.chatRepository.addMessage(message);
-//
-//        // Update all chat requests as part of the POST request
-//        // See Redis branch for a more sophisticated, non-blocking approach
-//
-//        for (Map.Entry<DeferredResult<List<String>>, Integer> entry : this.chatRequests.entrySet()) {
-//            List<String> messages = this.chatRepository.getMessages(entry.getValue());
-//            entry.getKey().setResult(messages);
-//        }
-//    }
-
-    ///////////////DO NOT DISTURB!!!!///////////////////////////////////CHAT///////////////////////DO NOT DISTURB!!!!!!
+    //////////////////////////////////CHAT//////////////////////
 
 
     /////////////////////////////////////////////////////////////----OLD----///----CONTROLLER----////////////////////////

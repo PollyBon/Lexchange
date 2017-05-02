@@ -3241,3 +3241,21 @@ input[type=range]:focus::-ms-fill-upper {
     -o-transform: rotate(360deg);
     transform: rotate(360deg);
 }
+
+.word {
+    width: 100%;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.dictionary {
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

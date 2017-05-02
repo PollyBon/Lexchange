@@ -1,15 +1,15 @@
-package ua.nure.model.bean;
+package ua.nure.model;
 
 import java.io.Serializable;
 
-public class AppUserChatBean implements Serializable {
+public class AppUserChat implements Serializable {
 
     private static final long serialVersionUID = -8172940343036502076L;
 
     private long chatId;
     private long appUserId;
 
-    public AppUserChatBean(long chatId, long appUserId) {
+    public AppUserChat(long chatId, long appUserId) {
         this.chatId = chatId;
         this.appUserId = appUserId;
     }
@@ -43,7 +43,7 @@ public class AppUserChatBean implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AppUserChatBean that = (AppUserChatBean) o;
+        AppUserChat that = (AppUserChat) o;
 
         if (chatId != that.chatId) return false;
         return appUserId == that.appUserId;

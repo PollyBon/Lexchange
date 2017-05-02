@@ -35,4 +35,5 @@ public class WordDaoImpl extends AbstractDao<Long, Word> implements WordDao {
         criteria.add(Restrictions.eq("id", wordId));
         return (Word) criteria.uniqueResult();
     }
+
 }

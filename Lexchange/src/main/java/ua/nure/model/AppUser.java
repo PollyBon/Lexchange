@@ -1,6 +1,8 @@
 package ua.nure.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -77,6 +79,7 @@ public class AppUser {
     private String interestedIn;
 
     @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Invite> invites;
 
     @Transient
@@ -87,6 +90,10 @@ public class AppUser {
     private List<Chat> chats;
 
     private String approvementCode;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Dictionary> dictionaries;
 
     public long getId() {
         return id;
@@ -299,6 +306,14 @@ public class AppUser {
     public boolean haveInviteFrom(Long id) {
         return getInvites().stream()
                 .anyMatch(i -> i.getFromUserId() == id);
+    }
+
+    public List<Dictionary> getDictionaries() {
+        return dictionaries;
+    }
+
+    public void setDictionaries(List<Dictionary> dictionaries) {
+        this.dictionaries = dictionaries;
     }
 
     @Override

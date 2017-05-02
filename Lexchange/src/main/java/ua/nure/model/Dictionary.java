@@ -1,9 +1,14 @@
 package ua.nure.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class Dictionary {
@@ -14,10 +19,15 @@ public class Dictionary {
 
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private AppUser user;
 
     @NotEmpty
     private String language;
+
+    @OneToMany(mappedBy = "dictionary", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<Word> words;
 
     public long getId() {
         return id;
@@ -43,6 +53,28 @@ public class Dictionary {
         this.language = language;
     }
 
+    public List<Word> getWords() {
+        return words;
+    }
+
+    public void setWords(List<Word> words) {
+        this.words = words;
+    }
+
+    public String getWordsAsJSON() {
+        JSONArray array = new JSONArray();
+        for (Word word : words) {
+            JSONObject object = new JSONObject();
+            object.put("id", word.getId());
+            object.put("value", word.getValue());
+            object.put("translation", word.getTranslation());
+            object.put("comment", word.getComment());
+            object.put("dictionaryId", word.getDictionary().getId());
+            array.add(object);
+        }
+        return array.toJSONString().replaceAll("\"", "&quot;");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,7 +83,7 @@ public class Dictionary {
         Dictionary that = (Dictionary) o;
 
         if (id != that.id) return false;
-        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        if (user.getId() != that.user.getId()) return false;
         return language != null ? language.equals(that.language) : that.language == null;
 
     }
@@ -59,7 +91,7 @@ public class Dictionary {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (int) (user.getId() ^ (user.getId() >>> 32));
         result = 31 * result + (language != null ? language.hashCode() : 0);
         return result;
     }
@@ -68,7 +100,7 @@ public class Dictionary {
     public String toString() {
         return "Dictionary{" +
                 "id=" + id +
-                ", user=" + user +
+                ", userId=" + user.getId() +
                 ", language='" + language + '\'' +
                 '}';
     }

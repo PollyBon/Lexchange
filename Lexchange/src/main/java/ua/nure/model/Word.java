@@ -1,6 +1,8 @@
 package ua.nure.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
+import ua.nure.util.JSONView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,7 @@ public class Word {
 
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "dictionary_id")
     private Dictionary dictionary;
 
     @NotEmpty
@@ -73,7 +76,7 @@ public class Word {
         Word word = (Word) o;
 
         if (id != word.id) return false;
-        if (dictionary != null ? !dictionary.equals(word.dictionary) : word.dictionary != null) return false;
+        if (dictionary.getId() != word.dictionary.getId()) return false;
         if (value != null ? !value.equals(word.value) : word.value != null) return false;
         if (translation != null ? !translation.equals(word.translation) : word.translation != null) return false;
         return comment != null ? comment.equals(word.comment) : word.comment == null;
@@ -83,7 +86,7 @@ public class Word {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (dictionary != null ? dictionary.hashCode() : 0);
+        result = 31 * result + (int) (dictionary.getId() ^ (dictionary.getId() >>> 32));
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (translation != null ? translation.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
@@ -94,7 +97,7 @@ public class Word {
     public String toString() {
         return "Word{" +
                 "id=" + id +
-                ", dictionary=" + dictionary +
+                ", dictionaryId=" + dictionary.getId() +
                 ", value='" + value + '\'' +
                 ", translation='" + translation + '\'' +
                 ", comment='" + comment + '\'' +

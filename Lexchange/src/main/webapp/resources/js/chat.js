@@ -6,11 +6,65 @@ $(document).ready(function () {
 
         that.chatContent = ko.observable('');
         that.messageText = ko.observable('');
-        that.activePollingXhr = ko.observable(null);
+
+        that.words = ko.observableArray();
+        that.currentWord = ko.observable('');
+        that.currentWordValue = ko.observable('');
+        that.currentTranslation = ko.observable('');
+        that.currentComment = ko.observable('');
+        that.newWord = ko.observable('');
+
+        that.tran = ko.observable('');
+
+        that.showWords = function (param) {
+            that.words(JSON.parse((param)));
+        };
+
+        that.showInformation = function (param) {
+            that.currentWord(param);
+            that.currentWordValue("Word: " + param.value);
+            that.currentTranslation("Translation: " + param.translation);
+            that.currentComment(param.comment);
+        };
+
+        that.changeComment = function () {
+            var newComment = $("#commentId").val();
+            that.currentComment(newComment);
+
+            $.ajax({
+                url: "newComment",
+                type: "POST",
+                data: "comment=" + newComment +
+                "&wordId=" + that.currentWord().id +
+                "&dictionaryId=" + that.currentWord().dictionaryId,
+                error: function (xhr) {
+                    console.error("Error while changing the comment=" + xhr.status + ", statusText=" + xhr.statusText);
+                }
+            });
+        };
+
+        that.translateToNative = function () {
+            $.ajax({
+                url: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
+                type: "GET",
+                data: "key=trnsl.1.1.20160927T094359Z.bc33daa2e80b1e99.5b15b6bbb76f58f6e1f035b9395f0d4d50a82aa2" +
+                "&text=" + that.newWord() + "&lang=ru",
+                cache: false,
+                success: function (answer) {
+                    that.tran(JSON.stringify(answer));
+                },
+                error: function (xhr) {
+                    if (xhr.statusText != "abort" && xhr.status != 503) {
+                        console.error("Unable to retrieve translation");
+                    }
+                }
+            });
+
+        };
 
         that.joinChat = function () {
-             var form = $("#joinChatForm");
-             that.activePollingXhr($.ajax({
+            var form = $("#joinChatForm");
+            $.ajax({
                 url: form.attr("action"),
                 type: "GET",
                 data: $("#chatId"),
@@ -22,20 +76,17 @@ $(document).ready(function () {
                 },
                 error: function (xhr) {
                     if (xhr.statusText != "abort" && xhr.status != 503) {
-                        resetUI();
                         console.error("Unable to retrieve chat messages. Chat ended.");
                     }
                 }
-             }));
-
-             $('#messageText').focus();
-             pollForMessages();
+            });
+            getNewMessages();
+            $('#messageText').focus();
         };
 
-        function pollForMessages() {
-            var form = $("#joinChatForm");
-            that.activePollingXhr($.ajax({
-                url: form.attr("action"),
+        function getNewMessages() {
+            $.ajax({
+                url: 'newMessages',
                 type: "GET",
                 data: $("#chatId"),
                 cache: false,
@@ -43,16 +94,14 @@ $(document).ready(function () {
                     for (var i = 0; i < messageList.length; i++) {
                         that.chatContent(that.chatContent() + messageList[i]);
                     }
-                    keepPolling = false; //WAS ADDED
                 },
                 error: function (xhr) {
                     if (xhr.statusText != "abort" && xhr.status != 503) {
-                        resetUI();
-                        console.error("Unable to retrieve chat messages. Chat ended.");
+                        console.error("Unable to retrieve new messages. Chat ended.");
                     }
                 },
-                complete: pollForMessages
-            }));
+                complete: getNewMessages
+            });
             $('#messageText').focus();
         }
 
@@ -69,21 +118,8 @@ $(document).ready(function () {
                     }
                 });
                 that.messageText('');
-                keepPolling = true; //WAS ADDED
             }
         };
-
-        that.leaveChat = function () {
-            that.activePollingXhr(null);
-            resetUI();
-        };
-
-        function resetUI() {
-            keepPolling = false;
-            that.activePollingXhr(null);
-            that.messageText('');
-            that.chatContent('');
-        }
 
     }
 

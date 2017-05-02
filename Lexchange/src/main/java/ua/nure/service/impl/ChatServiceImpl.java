@@ -38,4 +38,9 @@ public class ChatServiceImpl implements ChatService{
 
         chat.setActive(false);
     }
+
+    @Override
+    public Chat findChatById(long chatId, boolean fetchUsers) {
+       return dao.findChatById(chatId, fetchUsers);
+    }
 }

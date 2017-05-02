@@ -201,19 +201,19 @@
                 </configuration>
             </plugin>
 
-            <!--FOR COMMUNITY-->
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <url>http://localhost:8080/manager/text</url>
-                    <path>/lexchange</path>
-                    <username>tomcat</username>
-                    <password>1111</password>
-                </configuration>
-            </plugin>
-            <!--FOR COMMUNITY-->
+            <!--&lt;!&ndash;FOR COMMUNITY&ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.tomcat.maven</groupId>-->
+                <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
+                <!--<version>2.2</version>-->
+                <!--<configuration>-->
+                    <!--<url>http://localhost:8080/manager/text</url>-->
+                    <!--<path>/lexchange</path>-->
+                    <!--<username>tomcat</username>-->
+                    <!--<password>1111</password>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <!--&lt;!&ndash;FOR COMMUNITY&ndash;&gt;-->
             
         </plugins>
         <finalName>lexchange</finalName>

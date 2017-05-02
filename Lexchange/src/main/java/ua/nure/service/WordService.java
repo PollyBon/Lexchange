@@ -13,4 +13,6 @@ public interface WordService {
     List<Word> findAllWords();
 
     Word findWordById(long wordId);
+
+    void updateWordComment(long wordId, String comment);
 }

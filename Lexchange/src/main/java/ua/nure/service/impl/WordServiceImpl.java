@@ -31,4 +31,11 @@ public class WordServiceImpl implements WordService {
     public Word findWordById(long wordId) {
         return dao.findWordById(wordId);
     }
+
+    @Override
+    public void updateWordComment(long wordId, String comment) {
+        Word word = dao.findWordById(wordId);
+
+        word.setComment(comment);
+    }
 }

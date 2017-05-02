@@ -4,7 +4,7 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import ua.nure.model.Message;
-import ua.nure.model.bean.AppUserChatBean;
+import ua.nure.model.AppUserChat;
 import ua.nure.model.enumerated.Age;
 import ua.nure.model.enumerated.Country;
 import ua.nure.model.enumerated.Language;
@@ -37,7 +37,7 @@ public class AppInitializer implements WebApplicationInitializer {
         context.setAttribute("languages", Language.values());
         context.setAttribute("ages", Age.values());
 
-        context.setAttribute("chatUserMessages", new HashMap<AppUserChatBean, ArrayList<Message>>());
+        context.setAttribute("chatUserMessages", new HashMap<AppUserChat, ArrayList<Message>>());
 
         context.setAttribute("online", new ArrayList<Long>());
     }
