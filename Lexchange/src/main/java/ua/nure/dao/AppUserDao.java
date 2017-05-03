@@ -9,6 +9,8 @@ public interface AppUserDao {
 
     AppUser findById(long id);
 
+    AppUser findById(long id, boolean fetchChats);
+
     List<AppUser> findByCriteria(SearchBean bean);
 
     AppUser findByApprovementCode(String code);

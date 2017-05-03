@@ -29,6 +29,10 @@ public class ChatServiceImpl implements ChatService{
         return dao.findAllChatsByUserId(userId);
     }
 
+    public List<Chat> findAllChatsByUserId(long userId, boolean fetchUsers) {
+        return dao.findAllChatsByUserId(userId, fetchUsers);
+    }
+
     public Chat findChatById(long chatId) {
         return dao.findChatById(chatId);
     }

@@ -61,6 +61,10 @@
                     "><a href="cabinet"><spring:message code="cabinet"/> <c:if test="${not empty user}"><i class="fa fa-angle-down"></i></c:if></a>
                         <c:if test="${not empty user}">
                             <ul role="menu" class="sub-menu">
+                                <li><a href="chats"><spring:message code="chats"/>
+                                    <c:if test="${user.invites.size() != 0}">
+                                        <span class="invites-counter">${user.invites.size()}</span></a></li>
+                                    </c:if>
                                 <li><a href="logout"><spring:message code="logout"/></a></li>
                             </ul>
                         </c:if>

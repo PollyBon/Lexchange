@@ -21,6 +21,10 @@ public class AppUserServiceImpl implements AppUserService {
         return dao.findById(id);
     }
 
+    public AppUser findById(long id, boolean fetchChats) {
+        return dao.findById(id, fetchChats);
+    }
+
     public List<AppUser> findByCriteria(SearchBean bean) {
         return dao.findByCriteria(bean);
     }

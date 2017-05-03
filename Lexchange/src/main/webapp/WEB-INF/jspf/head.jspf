@@ -33,6 +33,7 @@
     <script type="text/javascript" src="resources/js/jquery.isotope.min.js"></script>
     <script type="text/javascript" src="resources/js/lightbox.min.js"></script>
     <script type="text/javascript" src="resources/js/wow.min.js"></script>
+    <script type="text/javascript" src="resources/js/jquery.countTo.js"></script>
     <script type="text/javascript" src="resources/js/main.js"></script>
     <script type="text/javascript" src="resources/js/knockout-3.4.2.js"></script>
     <script type="text/javascript" src="resources/js/chat.js"></script>
