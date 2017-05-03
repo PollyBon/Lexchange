@@ -6,7 +6,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ua.nure.dao.AbstractDao;
 import ua.nure.dao.ChatDao;
-import ua.nure.model.AppUser;
 import ua.nure.model.Chat;
 
 import java.util.List;

@@ -55,4 +55,12 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
         criteria.add(Restrictions.eq("email", email));
         return (AppUser) criteria.uniqueResult();
     }
+
+    @Override
+    public List<AppUser> findUsersOfChat(long chatId) {
+        Criteria criteria = createEntityCriteria();
+        criteria.createAlias("chats", "c");
+        criteria.add(Restrictions.eq("c.id", chatId));
+        return (List<AppUser>) criteria.list();
+    }
 }

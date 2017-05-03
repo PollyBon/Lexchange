@@ -22,4 +22,6 @@ public interface AppUserDao {
     List<AppUser> findAllUsers();
 
     AppUser findUserByEmail(String email);
+
+    List<AppUser> findUsersOfChat(long chatId);
 }

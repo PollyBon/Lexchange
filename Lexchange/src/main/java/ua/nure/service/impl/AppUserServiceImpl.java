@@ -86,4 +86,9 @@ public class AppUserServiceImpl implements AppUserService {
         AppUser user = findUserByEmail(email);
         return (user == null || ((id != null) && (user.getId() == id)));
     }
+
+    @Override
+    public List<AppUser> findUsersOfChat(long chatId) {
+        return dao.findUsersOfChat(chatId);
+    }
 }

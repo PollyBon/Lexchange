@@ -43,15 +43,15 @@ $(document).ready(function () {
             });
         };
 
-        that.translateToNative = function () {
+        that.translateToLanguage = function (language) {
             $.ajax({
                 url: 'https://translate.yandex.net/api/v1.5/tr.json/translate',
                 type: "GET",
                 data: "key=trnsl.1.1.20160927T094359Z.bc33daa2e80b1e99.5b15b6bbb76f58f6e1f035b9395f0d4d50a82aa2" +
-                "&text=" + that.newWord() + "&lang=ru",
+                "&text=" + that.newWord() + "&lang=" + language,
                 cache: false,
                 success: function (answer) {
-                    that.tran(JSON.stringify(answer));
+                    that.tran(answer.text);
                 },
                 error: function (xhr) {
                     if (xhr.statusText != "abort" && xhr.status != 503) {

@@ -283,7 +283,16 @@ public class AppController {
 
     //////////////////////////////////CHAT//////////////////////
     @RequestMapping(value = "/enterChat", method = RequestMethod.GET)
-    public String getChatPage() {
+    public String getChatPage(ModelMap model, HttpSession session) {
+        //TODO: replace hardcoded chatId with id from request.
+        AppUser user = (AppUser) session.getAttribute("user");
+        long userId = user.getId();
+        List<AppUser> users = appUserService.findUsersOfChat(1);
+        for (AppUser u : users){
+            if (u.getId() != userId){
+                model.put("learnedLanguage", u.getNativeLanguage());
+            }
+        }
         return "chat";
     }
 

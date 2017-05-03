@@ -1,6 +1,5 @@
 package ua.nure.dao;
 
-import ua.nure.model.AppUser;
 import ua.nure.model.Chat;
 
 import java.util.List;
