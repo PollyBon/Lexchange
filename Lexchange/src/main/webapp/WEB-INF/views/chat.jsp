@@ -67,8 +67,8 @@
                     </p>
                     <p>
                         <input type="text" data-bind="value: tran">
-                        <button data-bind="click: translateToNative">${user.getNativeLanguage().toUpperCase()}</button>
-                        <%--<button data-bind="click: translateToLearned">${user.getNativeLanguage().toUpperCase()}</button>--%>
+                        <button data-bind="click: function () { translateToLanguage('${user.nativeLanguage}'); }">${user.getNativeLanguage().toUpperCase()}</button>
+                        <button data-bind="click: function () { translateToLanguage('${learnedLanguage}'); }">${learnedLanguage.toUpperCase()}</button>
                     </p>
                 </td>
             </tr>

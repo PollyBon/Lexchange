@@ -21,6 +21,10 @@ public class AppUserServiceImpl implements AppUserService {
         return dao.findById(id);
     }
 
+    public AppUser findById(long id, boolean fetchChats) {
+        return dao.findById(id, fetchChats);
+    }
+
     public List<AppUser> findByCriteria(SearchBean bean) {
         return dao.findByCriteria(bean);
     }
@@ -81,5 +85,10 @@ public class AppUserServiceImpl implements AppUserService {
     public boolean isEmployeeEmailUnique(Long id, String email) {
         AppUser user = findUserByEmail(email);
         return (user == null || ((id != null) && (user.getId() == id)));
+    }
+
+    @Override
+    public List<AppUser> findUsersOfChat(long chatId) {
+        return dao.findUsersOfChat(chatId);
     }
 }

@@ -15,6 +15,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -252,6 +253,9 @@ public class AppUser {
     }
 
     public List<Chat> getChats() {
+        if (chats == null) {
+            setChats(new LinkedList<>());
+        }
         return chats;
     }
 

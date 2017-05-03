@@ -18,6 +18,12 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
         return getByKey(id);
     }
 
+    public AppUser findById(long id, boolean fetchChats) {
+        AppUser user = getByKey(id);
+        user.getChats().size();
+        return user;
+    }
+
     public List<AppUser> findByCriteria(SearchBean bean) {
         Criteria criteria = createEntityCriteria();
         return (List<AppUser>) bean.buildCriteria(criteria).list();
@@ -48,5 +54,13 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("email", email));
         return (AppUser) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<AppUser> findUsersOfChat(long chatId) {
+        Criteria criteria = createEntityCriteria();
+        criteria.createAlias("chats", "c");
+        criteria.add(Restrictions.eq("c.id", chatId));
+        return (List<AppUser>) criteria.list();
     }
 }

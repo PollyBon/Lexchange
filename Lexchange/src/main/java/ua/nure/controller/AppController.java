@@ -1,6 +1,5 @@
 package ua.nure.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -8,20 +7,42 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-import ua.nure.model.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import ua.nure.model.AppUser;
+import ua.nure.model.AppUserChat;
+import ua.nure.model.Chat;
 import ua.nure.model.Dictionary;
+import ua.nure.model.Employee;
+import ua.nure.model.Invite;
+import ua.nure.model.Message;
+import ua.nure.model.Word;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
-import ua.nure.service.*;
-import ua.nure.util.JSONView;
+import ua.nure.service.AppUserService;
+import ua.nure.service.ChatService;
+import ua.nure.service.DictionaryService;
+import ua.nure.service.EmployeeService;
+import ua.nure.service.MessageService;
+import ua.nure.service.WordService;
 import ua.nure.util.Sender;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -52,12 +73,67 @@ public class AppController {
     @Autowired
     WordService wordService;
 
+    @RequestMapping(value = {"/accept"}, method = RequestMethod.GET)
+    public String acceptInvite(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Optional<Invite> optional = user.getInvites().stream()
+                .filter(i -> i.getId() == id)
+                .findFirst();
+        if (!optional.isPresent()) {
+            return "error";
+        }
+        Invite invite = optional.get();
+        user.getInvites().remove(invite);
+        appUserService.updateUser(user);
+        createChat(user.getId(), invite.getFromUserId());
+        return "chat"; //ToDo: replace with chat?id= method call
+    }
+
+    private Long createChat(Long... ids) {
+        List<AppUser> users = Arrays.asList(ids).stream()
+                .map(id -> appUserService.findById(id, true)).collect(Collectors.toList());
+        Chat chat = new Chat(users);
+        users.forEach(u -> u.getChats().add(chat));
+        users.forEach(appUserService::updateUser);
+        return chat.getId();
+    }
+
+    @RequestMapping(value = {"/chats"}, method = RequestMethod.GET)
+    public String openChats(ModelMap model, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+        List<Chat> chats = chatService.findAllChatsByUserId(user.getId(), true);
+        for (Chat chat : chats) {
+            chat.getUsers().remove(user);
+        }
+        model.addAttribute("chats", chats);
+
+        Map<Long, AppUser> invitations = new HashMap<>();
+        for (Invite invite : user.getInvites()) {
+            long id = invite.getFromUserId();
+            invitations.put(id, appUserService.findById(id));
+        }
+        model.addAttribute("invitations", invitations);
+
+        return "chats";
+    }
+
 
     @RequestMapping(value = {"/invite"}, method = RequestMethod.GET)
-    public String openSearch(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
+    public String invite(ModelMap model, HttpSession session, @RequestParam long id, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
         AppUser toUser = appUserService.findById(id);
-        if (toUser != null && toUser.getId() != user.getId()) {
+        if (toUser != null && toUser.getId() != user.getId()
+                && !toUser.haveInviteFrom(user.getId())) {
             toUser.getInvites().add(new Invite(user.getId(), toUser));
             appUserService.updateUser(toUser);
         }
@@ -70,8 +146,7 @@ public class AppController {
     @RequestMapping(value = {"/search"}, method = RequestMethod.GET)
     public String openSearch(ModelMap model, HttpSession session, SearchBean searchBean) {
         AppUser user = (AppUser) session.getAttribute("user");
-        if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
-            model.addAttribute("appUser", new AppUser());
+        if (!validateRoles(user, model)) {
             return "cabinet";
         }
         searchBean.setService(appUserService);
@@ -182,12 +257,12 @@ public class AppController {
 
     @RequestMapping(value = "/newComment", method = RequestMethod.POST)
     public void updateWordComment(@RequestParam long wordId, @RequestParam String comment,
-                                    @RequestParam long dictionaryId, HttpSession session) {
+                                  @RequestParam long dictionaryId, HttpSession session) {
         Word word = wordService.findWordById(wordId);
         Dictionary dictionary = dictionaryService.findDictionaryById(dictionaryId);
         wordService.updateWordComment(wordId, comment);
 
-        AppUser user = (AppUser)(session.getAttribute("user"));
+        AppUser user = (AppUser) (session.getAttribute("user"));
 
         int wordPosition = dictionary.getWords().indexOf(word);
         int dictionaryPosition = user.getDictionaries().indexOf(dictionary);
@@ -197,7 +272,7 @@ public class AppController {
 
         word.setComment(comment);
 
-        dictionary.getWords().add(wordPosition, word );
+        dictionary.getWords().add(wordPosition, word);
         user.getDictionaries().add(dictionaryPosition, dictionary);
 
         session.setAttribute("user", user);
@@ -208,7 +283,16 @@ public class AppController {
 
     //////////////////////////////////CHAT//////////////////////
     @RequestMapping(value = "/enterChat", method = RequestMethod.GET)
-    public String getChatPage() {
+    public String getChatPage(ModelMap model, HttpSession session) {
+        //TODO: replace hardcoded chatId with id from request.
+        AppUser user = (AppUser) session.getAttribute("user");
+        long userId = user.getId();
+        List<AppUser> users = appUserService.findUsersOfChat(1);
+        for (AppUser u : users){
+            if (u.getId() != userId){
+                model.put("learnedLanguage", u.getNativeLanguage());
+            }
+        }
         return "chat";
     }
 
@@ -319,6 +403,13 @@ public class AppController {
     //////////////////////////////////CHAT//////////////////////
 
 
+    private boolean validateRoles(AppUser user, ModelMap model) {
+        if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+            model.addAttribute("appUser", new AppUser());
+            return false;
+        }
+        return true;
+    }
     /////////////////////////////////////////////////////////////----OLD----///----CONTROLLER----////////////////////////
 
 

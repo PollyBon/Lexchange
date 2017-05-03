@@ -117,7 +117,7 @@ public class SearchBean {
                 comparing += (Math.abs(currentUser.getScience() - o1.getScience())
                         - Math.abs(currentUser.getScience() - o2.getScience()));
             return comparing * 1000 + o2.getFirstName().compareTo(o1.getFirstName())
-                    + o2.getLastName().compareTo(o1.getFirstName())
+                    + o2.getLastName().compareTo(o1.getLastName())
                     + o2.getCountry().compareTo(o1.getCountry())
                     + o2.getNativeLanguage().compareTo(o1.getNativeLanguage())
                     + o2.getEmail().compareTo(o1.getEmail())

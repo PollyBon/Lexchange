@@ -165,6 +165,22 @@ h3 {
     border: 4px solid;
 }
 
+.avatar-chat {
+    height: 260px;
+    width: 260px;
+    margin: auto;
+    border-radius:50%;
+    border: 4px solid;
+}
+
+.avatar-ico {
+    height: 50px;
+    width: 50px;
+    margin: auto;
+    border-radius:50%;
+    border: 2px solid white;
+}
+
 .carousel-indicators.visible-xs {
     height: 20px;
     margin: 0;
@@ -324,6 +340,7 @@ h3 {
 /*  Dropdown menu*/
 
 ul.sub-menu {
+    width: 100% !important;
     display: none;
     list-style: none;
     padding: 0;
@@ -831,6 +848,10 @@ ul.sub-menu {
     width: 100%;
 }
 
+.background-breadcrumb {
+    background-image: url(../images/home/tour-bg.png);
+}
+
 #team {
     padding: 85px 0;
 }
@@ -890,7 +911,8 @@ ul.sub-menu {
 }
 
 .team-single:hover .social-profile {
-    background: rgba(112, 35, 64, 0.9);
+    border-radius: 50%;
+    background: rgba(0, 200, 220, 0.8);
     display: block;
     -webkit-animation: fadeInUp 400ms;
     animation: fadeInUp 400ms;
@@ -3122,7 +3144,14 @@ input[type=range]:focus::-ms-fill-upper {
 
 .flag {
     border-radius: 30%;
-    border: 1px solid;
+    border: 1px solid grey;
+    margin-bottom: 4px;
+}
+
+.flag-mini {
+    width: 21px;
+    height: 13px;
+    border: 1px solid grey;
     margin-bottom: 4px;
 }
 
@@ -3140,8 +3169,8 @@ input[type=range]:focus::-ms-fill-upper {
     height: 40px !important;
     width: 40px !important;
     position: absolute !important;
-    bottom: 16px !important;
-    left: 16px !important;
+    bottom: 18px !important;
+    left: 18px !important;
     border: 2px solid white !important;
     border-radius: 50% !important;
 }
@@ -3242,6 +3271,7 @@ input[type=range]:focus::-ms-fill-upper {
     transform: rotate(360deg);
 }
 
+
 .word {
     width: 100%;
     height: 100px;
@@ -3259,3 +3289,18 @@ input[type=range]:focus::-ms-fill-upper {
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+.table-hover tbody tr:hover {
+    background: rgba(0, 200, 220, 0.8);
+}
+
+.invites-counter {
+    margin-left: 5px;
+    width: 22px;
+    text-align: center;
+    display: inline-block;
+    background: rgba(0, 200, 220, 0.8);
+    border-radius: 50%;
+    color: white;
+}
+>>>>>>> application
