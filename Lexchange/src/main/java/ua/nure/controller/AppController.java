@@ -357,7 +357,8 @@ public class AppController {
                     m.getSendingTime().getMonthOfYear() + "-" +
                     m.getSendingTime().getDayOfMonth() + " " +
                     m.getSendingTime().getHourOfDay() + ":" +
-                    m.getSendingTime().getMinuteOfHour() + "    " +
+                    m.getSendingTime().getMinuteOfHour() + ":" +
+                    m.getSendingTime().getSecondOfMinute() + "    " +
                     m.getContent() + System.lineSeparator();
             stringMessages.add(sb);
         }
