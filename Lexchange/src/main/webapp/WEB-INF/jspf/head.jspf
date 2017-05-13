@@ -35,4 +35,36 @@
     <script type="text/javascript" src="resources/js/wow.min.js"></script>
     <script type="text/javascript" src="resources/js/jquery.countTo.js"></script>
     <script type="text/javascript" src="resources/js/main.js"></script>
+
+    <c:if test="${not empty regions}">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['geochart']});
+            google.charts.setOnLoadCallback(drawRegionsMap);
+
+            function drawRegionsMap() {
+
+                var data = google.visualization.arrayToDataTable([
+                    ['<spring:message code="country"/>', '<spring:message code="members"/>'],
+                    <c:forEach var="elem" items="${regions.entrySet()}">
+                        ['${elem.getKey()}', ${elem.getValue()}],
+                    </c:forEach>
+                ]);
+
+                var options = {colorAxis: {minValue: 0,  colors: ['#f5f5f5', '#4fcccd']}};
+
+                var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+                function myClickHandler(){
+                    var selectionIdx = chart.getSelection()[0].row;
+                    var stateName = data.getValue(selectionIdx, 0);
+                    location.href = 'search?country=' + stateName;
+                }
+
+                google.visualization.events.addListener(chart, 'select', myClickHandler);
+
+                chart.draw(data, options);
+            }
+        </script>
+    </c:if>
 </head>

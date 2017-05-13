@@ -29,8 +29,10 @@ public class ChatDaoImpl extends AbstractDao<Long, Chat> implements ChatDao {
 
     public List<Chat> findAllChatsByUserId(long userId, boolean fetchUsers) {
         Criteria criteria = createEntityCriteria();
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria.createAlias("users", "u");
         criteria.add(Restrictions.eq("u.id", userId));
+        criteria.add(Restrictions.eq("active", true));
         List<Chat> chats = (List<Chat>) criteria.list();
         if (fetchUsers) {
             chats.forEach(c -> c.getUsers().size());
@@ -39,8 +41,16 @@ public class ChatDaoImpl extends AbstractDao<Long, Chat> implements ChatDao {
     }
 
     public Chat findChatById(long chatId) {
+        return findChatById(chatId, false);
+    }
+
+    public Chat findChatById(long chatId, boolean fetchUsers) {
         Criteria criteria = createEntityCriteria();
         criteria.add(Restrictions.eq("id", chatId));
-        return (Chat) criteria.uniqueResult();
+        Chat chat = (Chat) criteria.uniqueResult();
+        if (fetchUsers) {
+            chat.getUsers().size();
+        }
+        return chat;
     }
 }

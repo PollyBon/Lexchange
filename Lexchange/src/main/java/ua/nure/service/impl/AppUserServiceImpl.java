@@ -9,6 +9,7 @@ import ua.nure.model.bean.SearchBean;
 import ua.nure.service.AppUserService;
 
 import java.util.List;
+import java.util.Map;
 
 @Service("appUserService")
 @Transactional
@@ -27,6 +28,10 @@ public class AppUserServiceImpl implements AppUserService {
 
     public List<AppUser> findByCriteria(SearchBean bean) {
         return dao.findByCriteria(bean);
+    }
+
+    public Map<String, Long> countRegions() {
+        return dao.countRegions();
     }
 
     public AppUser findByApprovementCode(String code) {
@@ -67,6 +72,7 @@ public class AppUserServiceImpl implements AppUserService {
             user.setChats(appUser.getChats());
             user.setInterestedIn(appUser.getInterestedIn());
             user.setInvites(appUser.getInvites());
+            dao.getSession().merge(user);
         }
     }
 

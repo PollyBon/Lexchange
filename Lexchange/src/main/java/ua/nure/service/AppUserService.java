@@ -4,6 +4,7 @@ import ua.nure.model.AppUser;
 import ua.nure.model.bean.SearchBean;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AppUserService {
 
@@ -12,6 +13,8 @@ public interface AppUserService {
     AppUser findById(long id, boolean fetchChats);
 
     List<AppUser> findByCriteria(SearchBean bean);
+
+    Map<String, Long> countRegions();
 
     AppUser findByApprovementCode(String code);
 

@@ -9,19 +9,19 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import ua.nure.model.AppUser;
-import ua.nure.model.Chat;
-import ua.nure.model.Employee;
-import ua.nure.model.Invite;
+import org.springframework.web.servlet.ModelAndView;
+import ua.nure.model.*;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
 import ua.nure.service.ChatService;
+import ua.nure.service.ComplainService;
 import ua.nure.service.EmployeeService;
 import ua.nure.util.Sender;
 
@@ -44,6 +44,57 @@ public class AppController {
 
     @Autowired
     MessageSource messageSource;
+
+    @Autowired
+    ComplainService complainService;
+
+    @RequestMapping(value = {"/leave"}, method = RequestMethod.GET)
+    public String leave(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Chat chat = chatService.findChatById(id);
+        chat.setActive(false);
+        chatService.updateChat(chat);
+        return openChats(model, session);
+    }
+
+    @RequestMapping(value = {"/complain"}, method = RequestMethod.GET)
+    public String complain(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Chat chat = chatService.findChatById(id, true);
+        for(AppUser member : chat.getUsers()) {
+            if (member.getId() != user.getId()) {
+                complainService.createComplain(new Complain(member));
+            }
+        }
+        return openChats(model, session);
+    }
+
+    @RequestMapping(value = {"/decline"}, method = RequestMethod.GET)
+    public String declineInvite(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Optional<Invite> optional = user.getInvites().stream()
+                .filter(i -> i.getId() == id)
+                .findFirst();
+        if (!optional.isPresent()) {
+            return "error";
+        }
+        Invite invite = optional.get();
+        user.getInvites().remove(invite);
+        appUserService.updateUser(user);
+        return openChats(model, session);
+    }
 
     @RequestMapping(value = {"/accept"}, method = RequestMethod.GET)
     public String acceptInvite(ModelMap model, HttpSession session, @RequestParam long id) {
@@ -70,7 +121,7 @@ public class AppController {
                 .map(id -> appUserService.findById(id, true)).collect(Collectors.toList());
         Chat chat = new Chat(users);
         users.forEach(u -> u.getChats().add(chat));
-        users.forEach(appUserService::updateUser);
+        appUserService.updateUser(users.get(0));
         return chat.getId();
     }
 
@@ -214,16 +265,32 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, ModelMap model) {
         session.invalidate();
-        return "index";
+        return getIndex(model);
     }
 
     @RequestMapping(value = {"/"}, method = RequestMethod.GET)
-    public String getIndex() {
+    public String getIndex(ModelMap model) {
+        Map<String, Long> regions = appUserService.countRegions();
+        model.addAttribute("regions", regions);
+        Long members = 0L;
+        for(Map.Entry<String, Long> entry : regions.entrySet()) {
+            members += entry.getValue();
+        }
+        model.addAttribute("regions", regions);
+        model.addAttribute("members", members);
         return "index";
     }
 
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleAllException(Exception ex) {
+
+        ModelAndView model = new ModelAndView("error/generic_error");
+        model.addObject("errMsg", "this is Exception.class");
+        //ToDo: test
+        return model;
+    }
 
     private boolean validateRoles(AppUser user, ModelMap model) {
         if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {

@@ -94,7 +94,7 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="item active">
-                            <c:forEach var="invite" items="${user.invites}">
+                            <c:forEach var="invite" items="${user.invites}" end="3">
                                 <c:set var="elem" value="${invitations.get(invite.fromUserId)}"/>
                                 <div class="col-sm-3 col-xs-6">
                                     <div class="team-single-wrapper">
@@ -145,6 +145,60 @@
                                 </div>
                             </c:forEach>
                         </div>
+                        <c:if test="${user.invites.size() gt 3}">
+                            <div class="item">
+                                <c:forEach var="invite" items="${user.invites}" begin="4">
+                                    <c:set var="elem" value="${invitations.get(invite.fromUserId)}"/>
+                                    <div class="col-sm-3 col-xs-6">
+                                        <div class="team-single-wrapper">
+                                            <div class="team-single">
+                                                <div class="person-thumb">
+                                                    <c:choose>
+                                                        <c:when test="${empty elem.url}">
+                                                            <img src="resources/images/blank-avatar.jpg"
+                                                                 class="img-responsive avatar-chat"
+                                                                 style="border-color: ${searchBean.randomColor}">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="${elem.url}" class="img-responsive avatar-chat"
+                                                                 style="border-color: ${searchBean.randomColor}">
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <c:if test="${online.contains(elem.id)}">
+                                                        <img src="resources/images/online.ico" class="online-icon"/>
+                                                    </c:if>
+                                                </div>
+                                                <div class="social-profile">
+                                                    <ul class="nav nav-pills">
+                                                        <li><a href="#dialog${elem.id}"><i class="fa fa-link"></i></a></li>
+                                                        <li>
+                                                            <c:choose>
+                                                                <c:when test="${empty elem.url}">
+                                                                    <a href="resources/images/blank-avatar.jpg"
+                                                                       data-lightbox="example-set"><i class="fa fa-eye"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="${elem.url}" data-lightbox="example-set"><i
+                                                                            class="fa fa-eye"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </li>
+                                                        <li><a href="decline?id=${invite.id}"><i
+                                                                class="fa fa-thumbs-o-down"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="person-info align-center">
+                                                <h2><img src="resources/images/flags/${elem.country.toLowerCase()}.png"
+                                                         class="flag">
+                                                        ${elem.firstName} ${elem.lastName},
+                                                    <spring:message code="age"/>: ${elem.age}</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:if>
                     </div>
 
                     <a class="left team-carousel-control hidden-xs" href="#team-carousel" data-slide="prev">left</a>

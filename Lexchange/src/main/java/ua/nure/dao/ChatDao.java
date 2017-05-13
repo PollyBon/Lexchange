@@ -15,4 +15,6 @@ public interface ChatDao {
     List<Chat> findAllChatsByUserId(long userId, boolean fetchUsers);
 
     Chat findChatById(long chatId);
+
+    Chat findChatById(long chatId, boolean fetchUsers);
 }
