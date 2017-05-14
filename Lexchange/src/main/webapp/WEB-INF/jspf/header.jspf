@@ -66,6 +66,9 @@
                                         <span class="invites-counter">${user.invites.size()}</span></a></li>
                                     </c:if>
                                 <li><a href="logout"><spring:message code="logout"/></a></li>
+                                <c:if test="${user.role.name().equals('ADMIN')}">
+                                    <li><a href="admin"><spring:message code="page.admin"/></a></li>
+                                </c:if>
                             </ul>
                         </c:if>
                     </li>

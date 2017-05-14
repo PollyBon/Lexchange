@@ -22,7 +22,7 @@ public class ComplainDaoImpl extends AbstractDao<Long, Complain> implements Comp
 
     @Override
     public void deleteComplainByUserId(long id) {
-        Query query = getSession().createSQLQuery("delete from Complain where user.id = :id");
+        Query query = getSession().createQuery("delete from Complain c where c.appUser.id = :id");
         query.setLong("id", id);
         query.executeUpdate();
     }

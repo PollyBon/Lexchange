@@ -10,6 +10,8 @@ public interface AppUserService {
 
     AppUser findById(long id);
 
+    void blockById(long id);
+
     AppUser findById(long id, boolean fetchChats);
 
     List<AppUser> findByCriteria(SearchBean bean);

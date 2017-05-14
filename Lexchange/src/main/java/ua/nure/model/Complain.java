@@ -10,12 +10,12 @@ public class Complain {
     private long id;
 
     @ManyToOne
-    private AppUser user;
+    private AppUser appUser;
 
     public Complain() {}
 
-    public Complain(AppUser user) {
-        this.user = user;
+    public Complain(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public long getId() {
@@ -26,12 +26,12 @@ public class Complain {
         this.id = id;
     }
 
-    public AppUser getUser() {
-        return user;
+    public AppUser getAppUser() {
+        return appUser;
     }
 
-    public void setUser(AppUser user) {
-        this.user = user;
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     @Override
@@ -42,13 +42,13 @@ public class Complain {
         Complain complain = (Complain) o;
 
         if (id != complain.id) return false;
-        return user != null ? user.equals(complain.user) : complain.user == null;
+        return appUser != null ? appUser.equals(complain.appUser) : complain.appUser == null;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (appUser != null ? appUser.hashCode() : 0);
         return result;
     }
 }

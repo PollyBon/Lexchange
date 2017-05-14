@@ -48,6 +48,38 @@ public class AppController {
     @Autowired
     ComplainService complainService;
 
+    @RequestMapping(value = {"/forgive"}, method = RequestMethod.GET)
+    public String forgiveUser(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (user == null || !user.getRole().equals(Role.ADMIN)) {
+            return getIndex(model);
+        }
+        complainService.deleteComplainByUserId(id);
+        return getAdminPage(model, session);
+    }
+
+    @RequestMapping(value = {"/punish"}, method = RequestMethod.GET)
+    public String punishUser(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (user == null || !user.getRole().equals(Role.ADMIN)) {
+            return getIndex(model);
+        }
+        complainService.deleteComplainByUserId(id);
+        appUserService.blockById(id);
+        return getAdminPage(model, session);
+    }
+
+    @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
+    public String getAdminPage(ModelMap model, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (user == null || !user.getRole().equals(Role.ADMIN)) {
+            return getIndex(model);
+        }
+        List<Complain> complains = complainService.findAllComplains();
+        model.addAttribute("complains", complains);
+        return "admin";
+    }
+
     @RequestMapping(value = {"/leave"}, method = RequestMethod.GET)
     public String leave(ModelMap model, HttpSession session, @RequestParam long id) {
         AppUser user = (AppUser) session.getAttribute("user");
@@ -293,7 +325,7 @@ public class AppController {
     }
 
     private boolean validateRoles(AppUser user, ModelMap model) {
-        if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+        if (user == null || user.getRole().equals(Role.BLOCKED) || user.getRole().equals(Role.NEW)) {
             model.addAttribute("appUser", new AppUser());
             return false;
         }
