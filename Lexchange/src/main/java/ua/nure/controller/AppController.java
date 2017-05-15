@@ -176,8 +176,7 @@ public class AppController {
         Invite invite = optional.get();
         user.getInvites().remove(invite);
         appUserService.updateUser(user);
-        createChat(user.getId(), invite.getFromUserId());
-        return "chat"; //ToDo: replace with chat?id= method call
+        return "enterChat?chatId=" + createChat(user.getId(), invite.getFromUserId());
     }
 
     private Long createChat(Long... ids) {
@@ -378,17 +377,18 @@ public class AppController {
 
     //////////////////////////////////CHAT//////////////////////
     @RequestMapping(value = "/enterChat", method = RequestMethod.GET)
-    public String getChatPage(ModelMap model, HttpSession session) {
+    public String getChatPage(ModelMap model, HttpSession session, @RequestParam long chatId) {
         //TODO: replace hardcoded chatId with id from request.
         AppUser user = (AppUser) session.getAttribute("user");
         long userId = user.getId();
-        List<AppUser> users = appUserService.findUsersOfChat(1);
+        List<AppUser> users = appUserService.findUsersOfChat(chatId);
         for (AppUser u : users) {
             if (u.getId() != userId) {
                 model.put("learnedLanguage", u.getNativeLanguage());
             }
         }
-        return "chat";
+        model.put("chatId", chatId);
+        return "chat?chatId=" + chatId;
     }
 
     @RequestMapping(value = {"/leaveChat"}, method = RequestMethod.POST)

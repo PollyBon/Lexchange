@@ -8,10 +8,6 @@
 <div class="container">
     <div class="col-md-8">
         <h1>Chat</h1>
-        <form id="joinChatForm" method="GET" action="chat">
-            <input id="chatId" name="chatId" type="hidden" value="${1}"/>
-            <button id="start" type="submit" data-bind="click: joinChat">Join chat</button>
-        </form>
 
         <div>
             <textarea rows="20" cols="60" readonly="readonly" data-bind="text: chatContent"
@@ -21,7 +17,7 @@
         <form id="postMessageForm" method="POST" action="chat">
             <p>
                 <input id="messageText" name="messageText" type="text" data-bind="value: messageText"/>
-                <input id="chatId" name="chatId" type="hidden" value="${1}"/>
+                <input id="chatId" name="chatId" type="hidden" value="${chatId}"/>
                 <button id="post" type="submit" data-bind="click: postMessage">Post</button>
             </p>
         </form>
@@ -63,10 +59,10 @@
                 </td>
                 <td>
                     <p>
-                        <input type="text" data-bind="value: newWord">
+                        <input type="text" data-bind="value: newWord"/>
                     </p>
                     <p>
-                        <input type="text" data-bind="value: tran">
+                        <input type="text" data-bind="value: tran"/>
                         <button data-bind="click: function () { translateToLanguage('${user.nativeLanguage}'); }">${user.getNativeLanguage().toUpperCase()}</button>
                         <button data-bind="click: function () { translateToLanguage('${learnedLanguage}'); }">${learnedLanguage.toUpperCase()}</button>
                     </p>
