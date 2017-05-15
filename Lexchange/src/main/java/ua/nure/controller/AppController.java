@@ -7,14 +7,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import ua.nure.model.AppUser;
 import ua.nure.model.AppUserChat;
 import ua.nure.model.Chat;
+import ua.nure.model.Complain;
 import ua.nure.model.Dictionary;
 import ua.nure.model.Employee;
 import ua.nure.model.Invite;
@@ -24,6 +27,7 @@ import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
 import ua.nure.service.AppUserService;
 import ua.nure.service.ChatService;
+import ua.nure.service.ComplainService;
 import ua.nure.service.DictionaryService;
 import ua.nure.service.EmployeeService;
 import ua.nure.service.MessageService;
@@ -73,6 +77,89 @@ public class AppController {
     @Autowired
     WordService wordService;
 
+    @Autowired
+    ComplainService complainService;
+
+    @RequestMapping(value = {"/forgive"}, method = RequestMethod.GET)
+    public String forgiveUser(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (user == null || !user.getRole().equals(Role.ADMIN)) {
+            return getIndex(model);
+        }
+        complainService.deleteComplainByUserId(id);
+        return getAdminPage(model, session);
+    }
+
+    @RequestMapping(value = {"/punish"}, method = RequestMethod.GET)
+    public String punishUser(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (user == null || !user.getRole().equals(Role.ADMIN)) {
+            return getIndex(model);
+        }
+        complainService.deleteComplainByUserId(id);
+        appUserService.blockById(id);
+        return getAdminPage(model, session);
+    }
+
+    @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
+    public String getAdminPage(ModelMap model, HttpSession session) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (user == null || !user.getRole().equals(Role.ADMIN)) {
+            return getIndex(model);
+        }
+        List<Complain> complains = complainService.findAllComplains();
+        model.addAttribute("complains", complains);
+        return "admin";
+    }
+
+    @RequestMapping(value = {"/leave"}, method = RequestMethod.GET)
+    public String leave(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Chat chat = chatService.findChatById(id);
+        chat.setActive(false);
+        chatService.updateChat(chat);
+        return openChats(model, session);
+    }
+
+    @RequestMapping(value = {"/complain"}, method = RequestMethod.GET)
+    public String complain(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Chat chat = chatService.findChatById(id, true);
+        for (AppUser member : chat.getUsers()) {
+            if (member.getId() != user.getId()) {
+                complainService.createComplain(new Complain(member));
+            }
+        }
+        return openChats(model, session);
+    }
+
+    @RequestMapping(value = {"/decline"}, method = RequestMethod.GET)
+    public String declineInvite(ModelMap model, HttpSession session, @RequestParam long id) {
+        AppUser user = (AppUser) session.getAttribute("user");
+        if (!validateRoles(user, model)) {
+            return "cabinet";
+        }
+
+        Optional<Invite> optional = user.getInvites().stream()
+                .filter(i -> i.getId() == id)
+                .findFirst();
+        if (!optional.isPresent()) {
+            return "error";
+        }
+        Invite invite = optional.get();
+        user.getInvites().remove(invite);
+        appUserService.updateUser(user);
+        return openChats(model, session);
+    }
+
     @RequestMapping(value = {"/accept"}, method = RequestMethod.GET)
     public String acceptInvite(ModelMap model, HttpSession session, @RequestParam long id) {
         AppUser user = (AppUser) session.getAttribute("user");
@@ -98,7 +185,7 @@ public class AppController {
                 .map(id -> appUserService.findById(id, true)).collect(Collectors.toList());
         Chat chat = new Chat(users);
         users.forEach(u -> u.getChats().add(chat));
-        users.forEach(appUserService::updateUser);
+        appUserService.updateUser(users.get(0));
         return chat.getId();
     }
 
@@ -243,13 +330,21 @@ public class AppController {
     }
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, ModelMap model) {
         session.invalidate();
-        return "index";
+        return getIndex(model);
     }
 
     @RequestMapping(value = {"/"}, method = RequestMethod.GET)
-    public String getIndex() {
+    public String getIndex(ModelMap model) {
+        Map<String, Long> regions = appUserService.countRegions();
+        model.addAttribute("regions", regions);
+        Long members = 0L;
+        for (Map.Entry<String, Long> entry : regions.entrySet()) {
+            members += entry.getValue();
+        }
+        model.addAttribute("regions", regions);
+        model.addAttribute("members", members);
         return "index";
     }
 
@@ -288,8 +383,8 @@ public class AppController {
         AppUser user = (AppUser) session.getAttribute("user");
         long userId = user.getId();
         List<AppUser> users = appUserService.findUsersOfChat(1);
-        for (AppUser u : users){
-            if (u.getId() != userId){
+        for (AppUser u : users) {
+            if (u.getId() != userId) {
                 model.put("learnedLanguage", u.getNativeLanguage());
             }
         }
@@ -403,9 +498,17 @@ public class AppController {
 
     //////////////////////////////////CHAT//////////////////////
 
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleAllException(Exception ex) {
+
+        ModelAndView model = new ModelAndView("error/generic_error");
+        model.addObject("errMsg", "this is Exception.class");
+        //ToDo: test
+        return model;
+    }
 
     private boolean validateRoles(AppUser user, ModelMap model) {
-        if (user == null || user.getRole().name().equals("BLOCKED") || user.getRole().name().equals("NEW")) {
+        if (user == null || user.getRole().equals(Role.BLOCKED) || user.getRole().equals(Role.NEW)) {
             model.addAttribute("appUser", new AppUser());
             return false;
         }

@@ -2,14 +2,19 @@ package ua.nure.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ua.nure.dao.AbstractDao;
 import ua.nure.dao.AppUserDao;
 import ua.nure.model.AppUser;
 import ua.nure.model.bean.SearchBean;
+import ua.nure.model.enumerated.Country;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository("appUserDao")
 public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUserDao {
@@ -27,6 +32,17 @@ public class AppUserDaoImpl extends AbstractDao<Long, AppUser> implements AppUse
     public List<AppUser> findByCriteria(SearchBean bean) {
         Criteria criteria = createEntityCriteria();
         return (List<AppUser>) bean.buildCriteria(criteria).list();
+    }
+
+    public Map<String, Long> countRegions() {
+        Map <String, Long> map = new HashMap<>();
+        for (Country country : Country.values()) {
+            Criteria criteria = createEntityCriteria();
+            criteria.add(Restrictions.eq("country", country.getCode()));
+            criteria.setProjection(Projections.rowCount());
+            map.put (country.getCode(), (Long) criteria.uniqueResult());
+        }
+        return map;
     }
 
     public AppUser findByApprovementCode(String code) {

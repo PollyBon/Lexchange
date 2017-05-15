@@ -10,6 +10,8 @@ public interface ChatService {
 
     void deleteChatById(long id);
 
+    void updateChat(Chat chat);
+
     List<Chat> findAllChatsByUserId(long userId);
 
     List<Chat> findAllChatsByUserId(long userId, boolean fetchUsers);
@@ -19,4 +21,5 @@ public interface ChatService {
     Chat findChatById(long chatId, boolean fetchUsers);
 
     void updateChatStatus(long chatId);
+
 }

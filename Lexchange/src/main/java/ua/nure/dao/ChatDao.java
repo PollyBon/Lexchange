@@ -17,5 +17,4 @@ public interface ChatDao {
     Chat findChatById(long chatId);
 
     Chat findChatById(long chatId, boolean fetchUsers);
-
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service("appChatService")
 @Transactional
-public class ChatServiceImpl implements ChatService{
+public class ChatServiceImpl implements ChatService {
 
     @Autowired
     private ChatDao dao;
@@ -23,6 +23,14 @@ public class ChatServiceImpl implements ChatService{
 
     public void deleteChatById(long id) {
         dao.deleteChatById(id);
+    }
+
+    public void updateChat(Chat chat) {
+        Chat result = dao.findChatById(chat.getId());
+        if (result != null) {
+            result.setActive(chat.isActive());
+            result.setUsers(chat.getUsers());
+        }
     }
 
     public List<Chat> findAllChatsByUserId(long userId) {
@@ -45,6 +53,7 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public Chat findChatById(long chatId, boolean fetchUsers) {
-       return dao.findChatById(chatId, fetchUsers);
+        return dao.findChatById(chatId, fetchUsers);
     }
+
 }

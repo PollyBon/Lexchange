@@ -47,6 +47,7 @@ public class SearchBean {
     }
 
     public Criteria buildCriteria(Criteria criteria) {
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         if(!nativeLanguage.equals("not")) {
             criteria.add(Restrictions.eq("nativeLanguage", nativeLanguage));
         }

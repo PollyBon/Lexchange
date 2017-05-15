@@ -61,6 +61,38 @@
     </div>
 </section>
 
+<section id="action">
+    <div class="vertical-center">
+        <div class="container">
+            <div class="row">
+                <div class="action count">
+                    <div class="col-sm-4 text-center wow bounceIn" data-wow-duration="5000ms" data-wow-delay="300ms">
+                        <h1 class="timer bold" data-to="${members}" data-speed="5000" data-from="0"></h1>
+                        <h3><spring:message code="members"/></h3>
+                    </div>
+                    <div class="col-sm-4 text-center wow bounceIn" data-wow-duration="5000ms" data-wow-delay="300ms">
+                        <h1 class="timer bold" data-to="${fn:length(countries)}" data-speed="5000" data-from="0"></h1>
+                        <h3><spring:message code="countries"/></h3>
+                    </div>
+                    <div class="col-sm-4 text-center wow bounceIn" data-wow-duration="5000ms" data-wow-delay="300ms">
+                        <h1 class="timer bold" data-to="${fn:length(languages)}" data-speed="5000" data-from="0"></h1>
+                        <h3><spring:message code="languages"/></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="services">
+    <div class="container">
+        <div class="row">
+            <div id="regions_div" class="col-sm-12 text-center padding wow fadeIn" data-wow-duration="1000ms"
+                 data-wow-delay="300ms"></div>
+        </div>
+    </div>
+</section>
+
 <section id="action" class="responsive">
     <div class="vertical-center">
         <div class="container">
@@ -75,40 +107,6 @@
                             <a href="https://www.momondo.ua" class="btn btn-common">Buy Ticket</a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="features">
-    <div class="container">
-        <div class="row">
-            <div class="single-features">
-                <div class="col-sm-5 wow fadeInLeft" data-wow-duration="500ms" data-wow-delay="300ms">
-                    <img src="resources/images/home/image1.png" class="img-responsive" alt="">
-                </div>
-                <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
-                    <h2>France - Germany meeting 2016</h2>
-                    <P>key fatback ball tip, tri-tip tenderloin drumstick salami strip steak.</P>
-                </div>
-            </div>
-            <div class="single-features">
-                <div class="col-sm-6 col-sm-offset-1 align-right wow fadeInLeft" data-wow-duration="500ms" data-wow-delay="300ms">
-                    <h2>Built for the Responsive Web</h2>
-                    <P>Mollit eiusmod id chuck turducken laboris meatloaf pork loin tenderloin swine. Pancetta excepteur fugiat strip steak tri-tip. Swine salami eiusmod sint, ex id venison non. Fugiat ea jowl cillum meatloaf.</P>
-                </div>
-                <div class="col-sm-5 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
-                    <img src="resources/images/home/image2.png" class="img-responsive" alt="">
-                </div>
-            </div>
-            <div class="single-features">
-                <div class="col-sm-5 wow fadeInLeft" data-wow-duration="500ms" data-wow-delay="300ms">
-                    <img src="resources/images/home/image3.png" class="img-responsive" alt="">
-                </div>
-                <div class="col-sm-6 wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
-                    <h2>Experienced and Enthusiastic</h2>
-                    <P>Ut officia cupidatat anim excepteur fugiat cillum ea occaecat rump pork chop tempor. Ut tenderloin veniam commodo. Shankle aliquip short ribs, chicken eiusmod exercitation shank landjaeger spare ribs corned beef.</P>
                 </div>
             </div>
         </div>
