@@ -103,6 +103,18 @@ h3 {
     text-align: right;
 }
 
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.width-100 {
+    width: 100%;
+}
+
 .inline {
     display: inline-block;
 }
@@ -539,7 +551,7 @@ ul.sub-menu {
     font-weight: 300;
     outline: none;
     box-shadow: none;
-    height: 40px;
+    resize: none;
 }
 
 .form-control-inline {
@@ -3271,23 +3283,37 @@ input[type=range]:focus::-ms-fill-upper {
     transform: rotate(360deg);
 }
 
-
-.word {
-    width: 100%;
-    height: 100px;
-    margin: 0;
-    padding: 0;
+.scrollbar {
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
+.words {
+    height: 200px;
+}
+
 .dictionary {
-    width: 100%;
-    height: 50px;
-    margin: 0;
-    padding: 0;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    height: 110px;
+}
+
+.scrollbar::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar::-webkit-scrollbar
+{
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar::-webkit-scrollbar-thumb
+{
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #5bc0de;
 }
 
 .table-hover tbody tr:hover {
@@ -3303,4 +3329,21 @@ input[type=range]:focus::-ms-fill-upper {
     border-radius: 50%;
     color: white;
 }
->>>>>>> application
+
+.chat-block {
+    box-shadow: 0 0 0 #000000;
+    border: 2px solid #5bc0de;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    display: block;
+}
+
+.chat-block td {
+    width: 50%;
+}
+
+.word-description {
+    height: 50px;
+}
+

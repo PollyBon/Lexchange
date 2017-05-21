@@ -119,7 +119,7 @@ public enum Language {
 
     public static Language getByCode(String code) {
         return Arrays.asList(values()).stream()
-                .filter(l -> l.getCode().equals(code))
+                .filter(l -> l.getCode().equalsIgnoreCase(code))
                 .findAny().orElseGet(() -> null);
     }
 
