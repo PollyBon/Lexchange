@@ -12,13 +12,9 @@
         <form id="postMessageForm" method="POST" action="chat">
             <p>
                 <input id="messageText" name="messageText" type="text" data-bind="value: messageText"/>
-                <input id="chatId" name="chatId" type="hidden" value="${1}"/>
+                <input id="chatId" name="chatId" type="hidden" value="${chatId}"/>
                 <button id="post" type="submit" data-bind="click: postMessage"><spring:message code="post"/></button>
             </p>
-        </form>
-        <form id="joinChatForm" method="GET" action="chat">
-            <input id="chatId" name="chatId" type="hidden" value="${1}"/>
-            <button id="start" type="submit" data-bind="click: joinChat">Join chat</button>
         </form>
     </div>
     <div class="col-md-4">
@@ -26,13 +22,6 @@
             <tr>
                 <td rowspan="2">
                     <div class="words scrollbar" data-bind="foreach: words">
-                        sdfsdf<br/>
-                        sdfsdf<br/>
-                        sdfsdf<br/>
-                        sdfsdf<br/>
-                        sdfsdf<br/>
-                        sdfsdf<br/>
-                        sdfsdf<br/>
                         <a data-bind="click: $parent.showInformation"><p data-bind="text: value"></p></a>
                     </div>
                 </td>

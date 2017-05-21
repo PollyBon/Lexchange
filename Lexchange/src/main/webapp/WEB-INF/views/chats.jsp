@@ -37,7 +37,7 @@
                     <tbody>
                     <c:forEach var="elem" items="${chats}">
                         <tr>
-                            <td onclick="location.href = 'chat?id=${elem.id}';">
+                            <td onclick="location.href='enterChat?chatId=${elem.id}';">
                                 <div class="col-md-3">
                                     <c:choose>
                                         <c:when test="${empty elem.users.get(0).url}">
@@ -54,7 +54,7 @@
                                         ${languages[1].getByCode(elem.users.get(0).nativeLanguage)}
                                 </div>
                             </td>
-                            <td onclick="location.href = 'chat?id=${elem.id}';">${elem}</td>
+                            <td onclick="location.href='enterChat?chatId=${elem.id}';">${elem}</td>
                                 <%--ToDo: find last message--%>
                             <td>
                                 <button class="btn btn-sm btn-warning"
