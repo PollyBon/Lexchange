@@ -27,4 +27,5 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Dictionary findDictionaryById(long dictionaryId) {
         return dao.findDictionaryById(dictionaryId);
     }
+
 }

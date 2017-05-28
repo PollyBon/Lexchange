@@ -22,8 +22,8 @@ $(document).ready(function () {
 
         that.showInformation = function (param) {
             that.currentWord(param);
-            that.currentWordValue("Word: " + param.value);
-            that.currentTranslation("Translation: " + param.translation);
+            that.currentWordValue(param.value);
+            that.currentTranslation(param.translation);
             that.currentComment(param.comment);
         };
 
@@ -62,33 +62,11 @@ $(document).ready(function () {
 
         };
 
-        that.joinChat = function () {
-            var form = $("#joinChatForm");
-            $.ajax({
-                url: form.attr("action"),
-                type: "GET",
-                data: $("#chatId"),
-                cache: false,
-                success: function (messageList) {
-                    for (var i = 0; i < messageList.length; i++) {
-                        that.chatContent(that.chatContent() + messageList[i]);
-                    }
-                },
-                error: function (xhr) {
-                    if (xhr.statusText != "abort" && xhr.status != 503) {
-                        console.error("Unable to retrieve chat messages. Chat ended.");
-                    }
-                }
-            });
-            getNewMessages();
-            $('#messageText').focus();
-        };
-
         function getNewMessages() {
             $.ajax({
                 url: 'newMessages',
                 type: "GET",
-                data: $("#chatId"),
+                data: "chatId=" + $('#chatId').val(),
                 cache: false,
                 success: function (messageList) {
                     for (var i = 0; i < messageList.length; i++) {
@@ -102,24 +80,59 @@ $(document).ready(function () {
                 },
                 complete: getNewMessages
             });
-            $('#messageText').focus();
         }
 
 
         that.postMessage = function () {
-            if (that.messageText().trim() != '') {
-                var form = $("#postMessageForm");
-                $.ajax({
-                    url: form.attr("action"),
-                    type: "POST",
-                    data: $('#postMessageForm :input'),
-                    error: function (xhr) {
-                        console.error("Error posting chat message: status=" + xhr.status + ", statusText=" + xhr.statusText);
-                    }
-                });
-                that.messageText('');
-            }
+            var form = $("#postMessageForm");
+            $.ajax({
+                url: form.attr("action"),
+                type: "POST",
+                data: $('#postMessageForm :input'),
+                error: function (xhr) {
+                    console.error("Error posting chat message: status=" + xhr.status + ", statusText=" + xhr.statusText);
+                }
+            });
+            that.messageText('');
+            $('#textarea').scrollTop($('#textarea')[0].scrollHeight);
         };
+
+        that.addNewWord = function (language) {
+            $.ajax({
+                url: "addNewWord",
+                type: "POST",
+                data: "value=" + that.newWord() + "&translation=" + that.tran() + "&language=" + language,
+                cache: false,
+                error: function (xhr) {
+                    console.error("Error adding new word: status=" + xhr.status + ", statusText=" + xhr.statusText)
+                }
+            });
+        };
+
+        window.onload = function () {
+            $.ajax({
+                url: "chat",
+                type: "GET",
+                data: "chatId=" + $('#chatId').val(),
+                cache: false,
+                success: function (messageList) {
+                    for (var i = 0; i < messageList.length; i++) {
+                        that.chatContent(that.chatContent() + messageList[i]);
+                    }
+                    $('#textarea').scrollTop($('#textarea')[0].scrollHeight);
+                },
+                error: function (xhr) {
+                    if (xhr.statusText != "abort" && xhr.status != 503) {
+                        console.error("Unable to retrieve chat messages. Chat ended.");
+                    }
+                }
+            });
+            getNewMessages();
+        };
+
+        window.onselect = function () {
+            $('#newWord').val(window.getSelection().toString());
+        }
 
     }
 

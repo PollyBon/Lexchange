@@ -39,7 +39,6 @@
     <script type="text/javascript" src="resources/js/jquery.countTo.js"></script>
     <script type="text/javascript" src="resources/js/main.js"></script>
     <script type="text/javascript" src="resources/js/knockout-3.4.2.js"></script>
-    <script type="text/javascript" src="resources/js/chat.js"></script>
 
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

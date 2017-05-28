@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +29,10 @@ public class Dictionary {
     @OneToMany(mappedBy = "dictionary", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Word> words;
+
+    public Dictionary() {
+        words = new ArrayList<>();
+    }
 
     public long getId() {
         return id;

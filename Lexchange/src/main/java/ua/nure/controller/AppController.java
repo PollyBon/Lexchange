@@ -7,45 +7,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ua.nure.model.AppUser;
-import ua.nure.model.AppUserChat;
-import ua.nure.model.Chat;
-import ua.nure.model.Complain;
+import ua.nure.model.*;
 import ua.nure.model.Dictionary;
-import ua.nure.model.Employee;
-import ua.nure.model.Invite;
-import ua.nure.model.Message;
-import ua.nure.model.Word;
 import ua.nure.model.bean.SearchBean;
 import ua.nure.model.enumerated.Role;
-import ua.nure.service.AppUserService;
-import ua.nure.service.ChatService;
-import ua.nure.service.ComplainService;
-import ua.nure.service.DictionaryService;
-import ua.nure.service.EmployeeService;
-import ua.nure.service.MessageService;
-import ua.nure.service.WordService;
+import ua.nure.service.*;
 import ua.nure.util.Sender;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -195,10 +170,13 @@ public class AppController {
             return "cabinet";
         }
         List<Chat> chats = chatService.findAllChatsByUserId(user.getId(), true);
+        Map<Chat, Message> chatsWithMessages = new HashMap<>();
         for (Chat chat : chats) {
             chat.getUsers().remove(user);
+            List<Message> messages = messageService.findAllMessagesForChat(chat.getId());
+            chatsWithMessages.put(chat, messages.get(messages.size() - 1));
         }
-        model.addAttribute("chats", chats);
+        model.addAttribute("chats", chatsWithMessages);
 
         Map<Long, AppUser> invitations = new HashMap<>();
         for (Invite invite : user.getInvites()) {
@@ -368,8 +346,6 @@ public class AppController {
 
         dictionary.getWords().add(wordPosition, word);
         user.getDictionaries().add(dictionaryPosition, dictionary);
-
-        session.setAttribute("user", user);
     }
 
     //////////////////////////////////DICTIONARY//////////////////////
@@ -378,7 +354,6 @@ public class AppController {
     //////////////////////////////////CHAT//////////////////////
     @RequestMapping(value = "/enterChat", method = RequestMethod.GET)
     public String getChatPage(ModelMap model, HttpSession session, @RequestParam long chatId) {
-        //TODO: replace hardcoded chatId with id from request.
         AppUser user = (AppUser) session.getAttribute("user");
         long userId = user.getId();
         List<AppUser> users = appUserService.findUsersOfChat(chatId);
@@ -388,7 +363,7 @@ public class AppController {
             }
         }
         model.put("chatId", chatId);
-        return "chat?chatId=" + chatId;
+        return "chat";
     }
 
     @RequestMapping(value = {"/leaveChat"}, method = RequestMethod.POST)
@@ -430,9 +405,9 @@ public class AppController {
 
     @RequestMapping(value = {"/chat"}, method = RequestMethod.GET)
     @ResponseBody
-    public List<String> getMessages(@RequestParam long chatId, HttpSession session) {
+    public List<String> getMessages(@RequestParam String chatId, HttpSession session) {
         AppUser user = (AppUser) session.getAttribute("user");
-        AppUserChat appUserChat = new AppUserChat(chatId, user.getId());
+        AppUserChat appUserChat = new AppUserChat(Long.valueOf(chatId), user.getId());
         ServletContext context = session.getServletContext();
 
         HashMap<AppUserChat, ArrayList<Message>> messageMap = (HashMap<AppUserChat, ArrayList<Message>>)
@@ -440,7 +415,7 @@ public class AppController {
         messageMap.put(appUserChat, new ArrayList<>());
         context.setAttribute("chatUserMessages", messageMap);
 
-        List<Message> messages = messageService.findAllMessagesForChat(chatId);
+        List<Message> messages = messageService.findAllMessagesForChat(Long.valueOf(chatId));
         return formatMessages(messages);
     }
 
@@ -474,6 +449,36 @@ public class AppController {
 
         messageService.createMessage(message);
         setMessageToContextMap(session, message, chat);
+    }
+
+    @RequestMapping(value = {"/addNewWord"}, method = RequestMethod.POST)
+    public void addNewWord(@RequestParam String translation, @RequestParam String value,
+                           @RequestParam String language, HttpSession session) {
+        Word word = new Word();
+        word.setComment("comment");
+        word.setTranslation(translation);
+        word.setValue(value);
+
+        AppUser user = (AppUser) session.getAttribute("user");
+        for (Dictionary dic : user.getDictionaries()) {
+            if (dic.getLanguage().equals(language)) {
+                word.setDictionary(dic);
+                dic.getWords().add(word);
+            }
+        }
+
+        if (word.getDictionary() == null) {
+            Dictionary dictionary = new Dictionary();
+            dictionary.setLanguage(language);
+            dictionary.setUser(user);
+            word.setDictionary(dictionary);
+            dictionary.getWords().add(word);
+            user.getDictionaries().add(dictionary);
+            appUserService.updateUser(user);
+            dictionaryService.createDictionary(dictionary);
+        }
+
+        wordService.createWord(word);
     }
 
     private void setMessageToContextMap(HttpSession session, Message message, Chat chat) {

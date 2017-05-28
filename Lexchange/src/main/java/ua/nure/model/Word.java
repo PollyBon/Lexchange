@@ -1,8 +1,6 @@
 package ua.nure.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotEmpty;
-import ua.nure.util.JSONView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

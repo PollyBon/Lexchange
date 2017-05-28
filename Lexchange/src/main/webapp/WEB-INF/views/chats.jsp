@@ -35,34 +35,33 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="elem" items="${chats}">
+                    <c:forEach var="elem" items="${chats.entrySet()}">
                         <tr>
-                            <td onclick="location.href='enterChat?chatId=${elem.id}';">
+                            <td onclick="location.href='enterChat?chatId=${elem.getKey().getId()}';">
                                 <div class="col-md-3">
                                     <c:choose>
-                                        <c:when test="${empty elem.users.get(0).url}">
+                                        <c:when test="${empty elem.getKey().getUsers().get(0).getUrl()}">
                                             <img src="resources/images/blank-avatar.jpg" class="avatar-ico"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="${elem.users.get(0).url}" class="avatar-ico"/>
+                                            <img src="${elem.getKey().getUsers().get(0).getUrl()}" class="avatar-ico"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
                                 <div class="col-md-9 inline header-3">
-                                    <img src="resources/images/flags/${elem.users.get(0).country.toLowerCase()}.png"
-                                         class="flag-mini"> ${elem.users.get(0).firstName} ${elem.users.get(0).lastName}<br/>
-                                        ${languages[1].getByCode(elem.users.get(0).nativeLanguage)}
+                                    <img src="resources/images/flags/${elem.getKey().getUsers().get(0).getCountry().toLowerCase()}.png"
+                                         class="flag-mini"> ${elem.getKey().getUsers().get(0).getFirstName()} ${elem.getKey().getUsers().get(0).getLastName()}<br/>
+                                        ${languages[1].getByCode(elem.getKey().getUsers().get(0).getNativeLanguage())}
                                 </div>
                             </td>
-                            <td onclick="location.href='enterChat?chatId=${elem.id}';">${elem}</td>
-                                <%--ToDo: find last message--%>
+                            <td onclick="location.href='enterChat?chatId=${elem.getKey().getId()}';">${elem.getValue().getContent()}</td>
                             <td>
                                 <button class="btn btn-sm btn-warning"
-                                        onclick="location.href = 'leave?id=${elem.id}'; return false;">
+                                        onclick="location.href = 'leave?id=${elem.getKey().getId()}'; return false;">
                                     <i class="fa fa-times"></i> <spring:message code="leave"/>
                                 </button>
                                 <button class="btn btn-sm btn-danger"
-                                        onclick="location.href = 'complain?id=${elem.id}'; return false;">
+                                        onclick="location.href = 'complain?id=${elem.getKey().getId()}'; return false;">
                                     <i class="fa fa-exclamation-triangle"></i> <spring:message code="complain"/>
                                 </button>
                             </td>
