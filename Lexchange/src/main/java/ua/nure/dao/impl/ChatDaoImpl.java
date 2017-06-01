@@ -2,6 +2,7 @@ package ua.nure.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import ua.nure.dao.AbstractDao;
@@ -33,6 +34,7 @@ public class ChatDaoImpl extends AbstractDao<Long, Chat> implements ChatDao {
         criteria.createAlias("users", "u");
         criteria.add(Restrictions.eq("u.id", userId));
         criteria.add(Restrictions.eq("active", true));
+        criteria.addOrder(Order.asc("u.id"));
         List<Chat> chats = (List<Chat>) criteria.list();
         if (fetchUsers) {
             chats.forEach(c -> c.getUsers().size());

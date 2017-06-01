@@ -459,6 +459,10 @@ ul.sub-menu {
     resize: none;
 }
 
+#home-slider h2 {
+    margin-top: 16px;
+}
+
 .bottom > h2 {
     margin-top: 0;
     margin-bottom: 26px;
@@ -3289,11 +3293,11 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .words {
-    height: 200px;
+    height: 216px;
 }
 
 .dictionary {
-    height: 110px;
+    height: 116px;
 }
 
 .scrollbar::-webkit-scrollbar-track
@@ -3331,6 +3335,15 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .chat-block {
+    box-shadow: 0 0 0 #000000;
+    border: 2px solid #5bc0de;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    display: block;
+}
+
+.message-field {
     box-shadow: 0 0 0 #000000;
     border: 2px solid #5bc0de;
     border-radius: 10px;

@@ -79,7 +79,7 @@ public class AppUser {
 
     private String interestedIn;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "toUser", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Invite> invites;
 

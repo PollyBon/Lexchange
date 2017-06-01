@@ -54,7 +54,9 @@
                                         ${languages[1].getByCode(elem.getKey().getUsers().get(0).getNativeLanguage())}
                                 </div>
                             </td>
-                            <td onclick="location.href='enterChat?chatId=${elem.getKey().getId()}';">${elem.getValue().getContent()}</td>
+                            <td onclick="location.href='enterChat?chatId=${elem.getKey().getId()}';">
+                                <c:if test="${not empty elem.getValue()}">${elem.getValue().getContent()}</c:if>
+                            </td>
                             <td>
                                 <button class="btn btn-sm btn-warning"
                                         onclick="location.href = 'leave?id=${elem.getKey().getId()}'; return false;">

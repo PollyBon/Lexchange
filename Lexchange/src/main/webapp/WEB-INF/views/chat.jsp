@@ -8,16 +8,8 @@
 
 <div class="container">
     <div class="col-md-8">
-        <textarea id="textarea" rows="16" readonly="readonly" data-bind="text: chatContent"
+        <textarea id="textarea" rows="18" readonly="readonly" data-bind="text: chatContent"
                   class="form-control chat-block"></textarea>
-        <form id="postMessageForm" method="POST" action="chat">
-            <p>
-                <input id="messageText" name="messageText" type="text" data-bind="value: messageText"/>
-                <input id="chatId" name="chatId" type="hidden" value="${chatId}"/>
-                <button id="post" type="submit" data-bind="click: postMessage"><spring:message
-                        code="post"/></button>
-            </p>
-        </form>
     </div>
     <div class="col-md-4">
         <table class="table chat-block">
@@ -40,6 +32,15 @@
                         <button data-bind="click: changeComment" class="btn btn-sm btn-info width-100"><i
                                 class="fa fa-pencil"></i> <spring:message code="change"/></button>
                     </p>
+                    <p>
+                        <input type="text" class="form-control input-sm" data-bind="value: tran">
+                    </p>
+                    <p>
+                        <button class="btn btn-sm btn-info width-100"
+                                data-bind="click: function () { addNewWord('${learnedLanguage}'); }">
+                            <i class="fa fa-plus" aria-hidden="true"></i> <spring:message code="add"/>
+                        </button>
+                    </p>
                 </td>
             </tr>
             <tr>
@@ -61,22 +62,29 @@
                     </p>
                     <p>
                         <button data-bind="click: function () { translateToLanguage('${user.nativeLanguage}'); }"
-                                class="btn btn-sm btn-info float-left">${languages[0].getByCode(user.getNativeLanguage())}</button>
+                                class="btn btn-sm btn-info width-100">${languages[0].getByCode(user.getNativeLanguage())}
+                            <i class="fa fa-long-arrow-right" aria-hidden="true"></i></button>
+                    </p>
+                    <p>
                         <button data-bind="click: function () { translateToLanguage('${learnedLanguage}'); }"
-                                class="btn btn-sm btn-info float-right">${languages[0].getByCode(learnedLanguage.toUpperCase())}</button>
-                    </p>
-                    <p>
-                        <input type="text" class="form-control input-sm" data-bind="value: tran">
-                    </p>
-                    <p>
-                        <button class="btn btn-sm btn-info"
-                                data-bind="click: function () { addNewWord('${learnedLanguage}'); }">Add
-                        </button>
+                                class="btn btn-sm btn-info width-100"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+                            ${languages[0].getByCode(learnedLanguage.toUpperCase())}</button>
                     </p>
                 </td>
             </tr>
         </table>
     </div>
+    <form id="postMessageForm" method="POST" action="chat">
+        <input id="chatId" name="chatId" type="hidden" value="${chatId}"/>
+        <div class="col-md-8">
+            <textarea id="messageText" name="messageText" type="text" data-bind="value: messageText"
+                      class="form-control message-field" rows="2" spellcheck="false"></textarea>
+        </div>
+        <div class="col-md-4">
+            <button id="post" class="btn btn-submit" type="submit" data-bind="click: postMessage">
+                <spring:message code="post"/></button>
+        </div>
+    </form>
 </div>
 
 <%@ include file="/WEB-INF/jspf/footer.jspf" %>

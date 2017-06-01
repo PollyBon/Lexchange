@@ -170,15 +170,15 @@ public class AppController {
             return "cabinet";
         }
         List<Chat> chats = chatService.findAllChatsByUserId(user.getId(), true);
-        Map<Chat, Message> chatsWithMessages = new HashMap<>();
+        Map<Chat, Message> chatsWithMessages = new LinkedHashMap<>();
         for (Chat chat : chats) {
             chat.getUsers().remove(user);
             List<Message> messages = messageService.findAllMessagesForChat(chat.getId());
-            chatsWithMessages.put(chat, messages.get(messages.size() - 1));
+            chatsWithMessages.put(chat, messages.isEmpty() ? null : messages.get(messages.size() - 1));
         }
         model.addAttribute("chats", chatsWithMessages);
 
-        Map<Long, AppUser> invitations = new HashMap<>();
+        Map<Long, AppUser> invitations = new LinkedHashMap<>();
         for (Invite invite : user.getInvites()) {
             long id = invite.getFromUserId();
             invitations.put(id, appUserService.findById(id));
@@ -250,7 +250,7 @@ public class AppController {
             }
             appUserService.createOrUpdate(appUser);
 
-            session.setAttribute("user", appUser);
+            session.setAttribute("user", appUserService.findById(appUser.getId()));
             ((List<Long>) session.getServletContext().getAttribute("online")).add(appUser.getId());
         }
         return "cabinet";
