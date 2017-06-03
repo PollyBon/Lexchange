@@ -270,7 +270,7 @@ public class AppController {
         AppUser user = appUserService.findByApprovementCode(code);
         if (user != null) {
             user.setRole(Role.USER);
-            appUserService.updateUser(user);
+            appUserService.updateUser(user, Role.USER);
             session.setAttribute("user", user);
             ((List<Long>) session.getServletContext().getAttribute("online")).add(user.getId());
             model.addAttribute("appUser", user);

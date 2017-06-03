@@ -2,6 +2,7 @@ package ua.nure.service;
 
 import ua.nure.model.AppUser;
 import ua.nure.model.bean.SearchBean;
+import ua.nure.model.enumerated.Role;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ public interface AppUserService {
     void createUser(AppUser appUser);
 
     void updateUser(AppUser appUser);
+
+    void updateUser(AppUser appUser, Role role);
 
     void deleteUserByEmail(String email);
 

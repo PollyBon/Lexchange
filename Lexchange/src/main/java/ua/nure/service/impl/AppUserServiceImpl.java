@@ -59,6 +59,10 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     public void updateUser(AppUser appUser) {
+        updateUser(appUser, null);
+    }
+
+    public void updateUser(AppUser appUser, Role role) {
         AppUser user = dao.findById(appUser.getId());
         if (user != null) {
             user.setBirthDate(appUser.getBirthDate());
@@ -80,6 +84,9 @@ public class AppUserServiceImpl implements AppUserService {
             user.setChats(appUser.getChats());
             user.setInterestedIn(appUser.getInterestedIn());
             user.setInvites(appUser.getInvites());
+            if(role != null) {
+                user.setRole(role);
+            }
             dao.getSession().merge(user);
         }
     }
