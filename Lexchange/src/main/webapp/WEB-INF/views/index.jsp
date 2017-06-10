@@ -11,10 +11,9 @@
         <div class="row">
             <div class="main-slider">
                 <div class="slide-text">
-                    <h1>We Are Everywhere!</h1>
-                    <p>You can find friends all around the world and learn their language no matter who are you and where are you from.
-                    Let's start your personal Language Exchange now!</p>
-                    <a href="#footer" class="btn btn-common">SIGN UP</a>
+                    <h1><spring:message code="we_everywhere"/></h1>
+                    <p><spring:message code="we_everywhere_text"/></p>
+                    <a href="#footer" class="btn btn-common"><spring:message code="sign_up"/></a>
                 </div>
                 <img src="resources/images/home/slider/hill.png" class="slider-hill">
                 <img src="resources/images/home/slider/house.png" class="slider-house">
@@ -35,8 +34,8 @@
                     <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="300ms">
                         <img src="resources/images/home/icon1.png" >
                     </div>
-                    <h2>Real People</h2>
-                    <p>Meet new people all around the world and make new friends.</p>
+                    <h2><spring:message code="real_people"/></h2>
+                    <p><spring:message code="real_people_text"/></p>
                 </div>
             </div>
             <div class="col-sm-4 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="600ms">
@@ -44,8 +43,8 @@
                     <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="600ms">
                         <img src="resources/images/home/icon2.png" >
                     </div>
-                    <h2>Effective Studying</h2>
-                    <p>Study language that you are interested with native speakers fo free!</p>
+                    <h2><spring:message code="effective_studying"/></h2>
+                    <p><spring:message code="effective_studying_text"/></p>
                 </div>
             </div>
             <div class="col-sm-4 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="900ms">
@@ -53,8 +52,8 @@
                     <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="900ms">
                         <img src="resources/images/home/icon3.png" >
                     </div>
-                    <h2>You Are The Boss</h2>
-                    <p>Only you can decide how often your lessons will be. Time is no longer a problem!</p>
+                    <h2><spring:message code="you_boss"/></h2>
+                    <p><spring:message code="you_boss_text"/></p>
                 </div>
             </div>
         </div>
@@ -99,12 +98,12 @@
             <div class="row">
                 <div class="action take-tour">
                     <div class="col-sm-7 wow fadeInLeft" data-wow-duration="500ms" data-wow-delay="300ms">
-                        <h1 class="title">Meet your friends in real</h1>
-                        <p>Our clients can buy aircraft tickets with 25% off</p>
+                        <h1 class="title"><spring:message code="meet_friends"/></h1>
+                        <p><spring:message code="meet_friends_text"/></p>
                     </div>
                     <div class="col-sm-5 text-center wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
                         <div class="tour-button">
-                            <a href="https://www.momondo.ua" class="btn btn-common">Buy Ticket</a>
+                            <a href="https://www.momondo.ua" class="btn btn-common"><spring:message code="buy_ticket"/></a>
                         </div>
                     </div>
                 </div>
@@ -119,28 +118,8 @@
             <div class="col-sm-12">
                 <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
                     <p><img src="resources/images/home/clients.png" class="img-responsive" alt=""></p>
-                    <h1 class="title">Happy Clients</h1>
-                    <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <br> Ut enim ad minim veniam, quis nostrud </p>
-                </div>
-                <div class="clients-logo wow fadeIn" data-wow-duration="1000ms" data-wow-delay="600ms">
-                    <div class="col-xs-3 col-sm-2">
-                        <a href="#"><img src="resources/images/home/client1.png" class="img-responsive" alt=""></a>
-                    </div>
-                    <div class="col-xs-3 col-sm-2">
-                        <a href="#"><img src="resources/images/home/client2.png" class="img-responsive" alt=""></a>
-                    </div>
-                    <div class="col-xs-3 col-sm-2">
-                        <a href="#"><img src="resources/images/home/client3.png" class="img-responsive" alt=""></a>
-                    </div>
-                    <div class="col-xs-3 col-sm-2">
-                        <a href="#"><img src="resources/images/home/client4.png" class="img-responsive" alt=""></a>
-                    </div>
-                    <div class="col-xs-3 col-sm-2">
-                        <a href="#"><img src="resources/images/home/client5.png" class="img-responsive" alt=""></a>
-                    </div>
-                    <div class="col-xs-3 col-sm-2">
-                        <a href="#"><img src="resources/images/home/client6.png" class="img-responsive" alt=""></a>
-                    </div>
+                    <h1 class="title"><spring:message code="happy_clients"/></h1>
+                    <p><spring:message code="happy_clients_text1"/><br><spring:message code="happy_clients_text2"/></p>
                 </div>
             </div>
         </div>

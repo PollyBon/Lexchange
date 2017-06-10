@@ -6,24 +6,24 @@
                     <ul class="nav nav-pills">
                         <li><spring:message code="language"/>:
                             <select onchange="location.href=value" class="form-control form-small">
-                                <%--<c:forEach var="elem" items="${languages}">
+                                <c:forEach var="elem" items="${languages}">
                                     <option value="?locale=${elem.code}"
                                             <c:if test="${elem.code.equals(pageContext.response.locale.toLanguageTag())}">
                                                 selected
                                             </c:if>
                                     >${elem.name} </option>
-                                </c:forEach>--%>
+                                </c:forEach>
 
-                                <option value="?locale=ru"
-                                        <c:if test="${'ru'.equals(pageContext.response.locale.toLanguageTag())}">
-                                            selected
-                                        </c:if>
-                                >Russian </option>
-                                <option value="?locale=en"
-                                        <c:if test="${'en'.equals(pageContext.response.locale.toLanguageTag())}">
-                                            selected
-                                        </c:if>
-                                >English </option>
+                                <%--<option value="?locale=ru"--%>
+                                        <%--<c:if test="${'ru'.equals(pageContext.response.locale.toLanguageTag())}">--%>
+                                            <%--selected--%>
+                                        <%--</c:if>--%>
+                                <%-->Russian </option>--%>
+                                <%--<option value="?locale=en"--%>
+                                        <%--<c:if test="${'en'.equals(pageContext.response.locale.toLanguageTag())}">--%>
+                                            <%--selected--%>
+                                        <%--</c:if>--%>
+                                <%-->English </option>--%>
                             </select>
                         </li>
                         <li><a href=""><i class="fa fa-facebook"></i></a></li>

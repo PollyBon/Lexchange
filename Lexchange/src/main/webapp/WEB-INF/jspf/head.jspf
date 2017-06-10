@@ -54,6 +54,9 @@
                     <c:forEach var="elem" items="${regions.entrySet()}">
                     ['${elem.getKey()}', ${elem.getValue()}],
                     </c:forEach>
+                    ['RU',1000],['AF',170],['CM',176],['CA',1500],['CN',550],['CU',200],['FR',200],['HI',150],['MD',400],['GB',300],['TR',250],['SE',200],
+                    ['SD',350],['RS',300],['PA',150],['NP',30],['MX',300],['UG',150],['SS',400],['GL',40],['FI',300],['EG',600],['CD',100],['UK',2000],['BR',700],
+                    ['AR',800],['DZ',200],['AU',900],['US',800],['KZ',500]
                 ]);
 
                 var options = {colorAxis: {minValue: 0, colors: ['#f5f5f5', '#4fcccd']}};
