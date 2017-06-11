@@ -151,8 +151,8 @@ public class AppController {
         Invite invite = optional.get();
         user.getInvites().remove(invite);
         appUserService.updateUser(user);
-        createChat(user.getId(), invite.getFromUserId());
-        return "chats";
+        long chatId = createChat(user.getId(), invite.getFromUserId());
+        return getChatPage(model, session, chatId);
     }
 
     private Long createChat(Long... ids) {
